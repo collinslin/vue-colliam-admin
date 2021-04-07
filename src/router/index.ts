@@ -7,20 +7,20 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: '/login',
-		name: 'login',
-		component: () => import('/@/page/login/login.vue'),
-	},
-	{
-		path: '/home1',
-		name: 'home1',
-		component: () => import('/@/page/login/login.vue'),
+		name: "login",
+		component: () => import('/@/pages/login/login.vue'),
 		children: [
 			{
-				path: '/login1',
-				name: 'login1',
-				component: () => import('/@/page/login/login.vue'),
+				path: 'home',
+				name: 'home2',
+				component: () => import('/@/pages/lgl/lgl.vue'),
 			},
-		],
+		]
+	},
+	{
+		path: '/home',
+		name: 'home',
+		component: () => import('/@/pages/lgl/lgl.vue'),
 	},
 ]
 

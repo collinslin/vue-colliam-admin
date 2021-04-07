@@ -24,11 +24,8 @@ const role: MyDirective = {
 			const _this = binding.instance
 			const value = binding.value
 			const arg = binding.arg
-			console.log(arg)
-
-			
-			if(value){
-				if(value.length > 0 ){
+			if (value) {
+				if (value.length > 0) {
 					value.forEach((item: string) => {
 						if (item == 'click') {
 							_this.$message({
@@ -43,13 +40,10 @@ const role: MyDirective = {
 							})
 						}
 					})
-				}else{
+				} else {
 					
 				}
 			}
-			
-				
-
 		},
 	},
 }

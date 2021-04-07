@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import test from './test'
+import account from './modules/account';
 
 export default createStore({
 	state() {
@@ -8,7 +8,7 @@ export default createStore({
 		}
 	},
 	modules: {
-		test,
+		account
 	},
 	devtools: true,
 })

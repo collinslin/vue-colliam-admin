@@ -3,9 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import { elComponents, elPlugins } from '/@/plugin/element-plus'
+import runTime from './runTime';
 import directiveList from '/@/utils/directive'
-
-console.log(router)
 
 const app = createApp(App)
 
@@ -24,5 +23,8 @@ elComponents.forEach((component) => {
 directiveList.forEach((directive) => {
 	app.directive(directive.name, directive.option)
 })
+
+/**应用运行时加载应用配置 */
+runTime({ router, store, message: app.config.globalProperties.$message })
 
 app.mount('#app')

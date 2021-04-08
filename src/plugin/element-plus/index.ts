@@ -8,8 +8,16 @@ import {
 	ElMessage,
 	ElCheckbox,
 	ElLink,
-  ElForm,
-  ElFormItem
+	ElForm,
+	ElFormItem,
+	ElContainer,
+	ElHeader,
+	ElMain,
+	ElAside,
+	ElMenu,
+	ElSubmenu,
+	ElMenuItem,
+	ElMenuItemGroup,
 } from 'element-plus'
 export const elComponents = [
 	ElButton,
@@ -20,7 +28,15 @@ export const elComponents = [
 	ElTabPane,
 	ElCheckbox,
 	ElLink,
-  ElForm,
-  ElFormItem
+	ElForm,
+	ElFormItem,
+	ElContainer,
+	ElHeader,
+	ElMain,
+	ElAside,
+	ElMenu,
+	ElSubmenu,
+	ElMenuItem,
+	ElMenuItemGroup,
 ]
 export const elPlugins = [ElMessage]

@@ -1,11 +1,12 @@
 import deepMerge from 'deepmerge'
-import { RouteRecordRaw, createRouter } from 'vue-router'
-import { RunTimeOptions } from '../runTime';
+import { RouteRecordRaw } from 'vue-router'
+import { RunTimeOptions } from '../runTime'
+import { Authority } from '../type/store/account'
 
 //应用配置
 let appOptions: RunTimeOptions = {
 	router: undefined,
-	store: undefined
+	store: undefined,
 }
 
 /**初始化应用配置 */
@@ -20,33 +21,30 @@ export function setAppOptions(options: RunTimeOptions) {
  */
 export function loadRoutes(routesConfig?: RouteRecordRaw[]) {
 	const { router, store } = appOptions
-	const routes = router?.options.routes as RouteRecordRaw[], newRouter = null as any
-	console.log(router);
+	const routes = router?.options.routes as RouteRecordRaw[]
 	if (routesConfig) {
 		store?.commit('account/setRoutesConfig', routesConfig)
 	} else {
 		routesConfig = store?.getters['account/routesConfig']
 	}
-
 	if (routesConfig && routesConfig.length > 0) {
 		const finalRoutes = deepMergeRoutes(routes, routesConfig)
-		console.log(finalRoutes);
+		formatAuthority(finalRoutes)
+		console.log(finalRoutes)
 
-		// newRouter.options.routes = { ...router?.options, routes: finalRoutes }
-		finalRoutes.forEach((item) => {
-			console.log(1);
-
+		finalRoutes?.forEach((item) => {
 			router?.addRoute(item)
 		})
-		console.log(router);
-
 	}
 
-	// const rootRoute = routes.find(item => item.path === '/')
-	// const menuRoutes = rootRoute && rootRoute.children
-	// if (menuRoutes) {
-	// 	store?.commit('setting/setMenuData', menuRoutes)
-	// }
+	const routesList = router?.getRoutes()
+	const rootRoute = routesList?.find((item) => item.path === '/')
+	const menuRoutes = rootRoute && rootRoute.children
+	console.log(menuRoutes)
+
+	if (menuRoutes) {
+		store?.commit('setting/setMenuData', menuRoutes)
+	}
 }
 
 /**合并路由 */
@@ -85,6 +83,51 @@ const parseRoutesMap = (routesMap: []) => {
 	})
 }
 
+/**初始化路由权限 */
+export function formatAuthority(
+	routes: RouteRecordRaw[],
+	pAuthorities: Authority[] = []
+) {
+	routes.forEach((route) => {
+		const meta = route.meta
+		const defaultAuthority = (pAuthorities &&
+			pAuthorities[pAuthorities.length - 1]) || {
+			permission: '*',
+		}
+		if (meta) {
+			let authority: Authority = {}
+			if (!meta.authority) {
+				authority = defaultAuthority
+			} else if (typeof meta.authority === 'string') {
+				authority.permission = meta.authority
+			} else if (typeof meta.authority === 'object') {
+				authority = meta.authority as Authority
+				const { role } = authority
+				if (typeof role === 'string') {
+					authority.role = [role]
+				}
+				if (!authority.permission && !authority.role) {
+					authority = defaultAuthority
+				}
+			}
+			meta.authority = authority
+		} else {
+			const authority = defaultAuthority
+			route.meta = { authority }
+		}
+		if (route.meta) {
+			route.meta.pAuthorities = pAuthorities
+			if (route.children && pAuthorities) {
+				formatAuthority(route.children, [
+					...pAuthorities,
+					route.meta.authority as Authority,
+				])
+			}
+		}
+	})
+}
+
 export default {
-	loadRoutes
+	loadRoutes,
+	formatAuthority,
 }

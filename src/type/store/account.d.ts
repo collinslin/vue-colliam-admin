@@ -1,9 +1,7 @@
-import { RouteRecordRaw } from 'vue-router'
 export interface Account {
 	user?: any
 	permissions?: string[] | Permissions[] | null
 	roles?: string[] | Roles[] | null
-	routesConfig?: null | RouteRecordRaw[]
 	[key: string]: any
 }
 

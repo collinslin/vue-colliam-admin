@@ -25,3 +25,34 @@ Run `Volar: Switch TS Plugin on/off` from VSCode command palette.
 3. Open `src/main.ts` in VSCode
 4. Open the VSCode command palette
 5. Search and run "Select TypeScript version" -> "Use workspace version"
+
+data = [{
+router: 'root',
+children: [
+{
+router: 'form',
+children: ['basicForm', 'stepForm', 'advanceForm']
+},
+{
+router: 'basicForm',
+name: '验权表单',
+icon: 'file-excel',
+authority: 'queryForm'
+},
+{
+router: 'antdv',
+path: 'antdv',
+name: 'Ant Design Vue',
+icon: 'ant-design',
+link: 'https://www.antdv.com/docs/vue/introduce-cn/'
+},
+{
+router: 'document',
+path: 'document',
+name: '使用文档',
+icon: 'file-word',
+link: 'https://iczer.gitee.io/vue-antd-admin-docs/'
+}
+]
+
+}]

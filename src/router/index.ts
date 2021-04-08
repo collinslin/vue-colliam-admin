@@ -4,15 +4,16 @@ import RootView from '/@/layout/rootView'
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
-		name: '首页',
+		name: 'root',
 		component: RootView,
 		redirect: '/login',
 		children: [
 			{
-				path: '/home',
+				path: 'home',
 				name: 'home',
 				component: () => import('/@/pages/home/home.vue'),
 				meta: {
+					title: '首页',
 					role: ['click'],
 				},
 			},

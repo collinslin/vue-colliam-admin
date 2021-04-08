@@ -1,7 +1,8 @@
 import deepMerge from 'deepmerge'
-import { RouteRecordRaw } from 'vue-router'
+import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 import { RunTimeOptions } from '../runTime'
 import { Authority } from '../type/store/account'
+import { RoutesConfig } from '/@/type/store/router';
 
 //应用配置
 let appOptions: RunTimeOptions = {
@@ -16,22 +17,59 @@ export function setAppOptions(options: RunTimeOptions) {
 	appOptions.store = store
 }
 
+/**初始化路由表 */
+function parseRoutes(vueRoutes: RouteRecordNormalized[], routesConfig: RoutesConfig[]) {
+	let asyncRouterMap: RouteRecordRaw[] = []
+	routesConfig.forEach((item: RoutesConfig | string) => {
+		let vueRouter: any = undefined, routeCfg = {} as RoutesConfig
+		if (typeof item == 'string') {
+			vueRouter = vueRoutes.find((vueRoutesItem) => vueRoutesItem.name == item)
+			routeCfg = { path: vueRouter?.path as string, router: item }
+		} else {
+			vueRouter = vueRoutes.find((vueRoutesItem) => vueRoutesItem.name == item.router)
+			routeCfg = item
+		}
+		if (vueRouter) {
+			const asyncRouter: RouteRecordRaw = {
+				path: vueRouter?.path as string,
+				name: vueRouter?.name,
+				component: vueRouter?.components as any,
+				meta: {
+					authority: routeCfg?.authority || vueRouter?.authority || routeCfg.meta?.authority || vueRouter.meta?.authority || '*',
+					icon: routeCfg.icon || vueRouter.icon || routeCfg.meta?.icon || vueRouter.meta?.icon,
+					page: routeCfg.page || vueRouter.page || routeCfg.meta?.page || vueRouter.meta?.page,
+					link: routeCfg.link || vueRouter.link || routeCfg.meta?.link || vueRouter.meta?.link,
+					invisible: routeCfg.invisible || vueRouter.invisible || routeCfg.meta?.invisible || vueRouter.meta?.invisible,
+				},
+			}
+			if (routeCfg.children && routeCfg.children.length > 0) {
+				asyncRouter.children = parseRoutes(vueRoutes, routeCfg.children)
+			}
+			asyncRouterMap.push(asyncRouter)
+		}
+
+	})
+	return asyncRouterMap
+}
+
 /**加载路由
- * @param routesConfig {RouteRecordRaw[]} 路由配置
+ * @param routesConfig {any[]} 路由配置
  */
-export function loadRoutes(routesConfig?: RouteRecordRaw[]) {
+export function loadRoutes(routesConfig?: RoutesConfig[]) {
 	const { router, store } = appOptions
-	const routes = router?.options.routes as RouteRecordRaw[]
+	const vueRoutes = router?.getRoutes() as RouteRecordNormalized[]
 	if (routesConfig) {
-		store?.commit('account/setRoutesConfig', routesConfig)
+		store?.commit('router/setRoutesConfig', routesConfig)
 	} else {
-		routesConfig = store?.getters['account/routesConfig']
+		routesConfig = store?.getters['router/routesConfig']
 	}
 	if (routesConfig && routesConfig.length > 0) {
-		const finalRoutes = deepMergeRoutes(routes, routesConfig)
+		const asyncRouters = parseRoutes(vueRoutes, routesConfig)
+		console.log(asyncRouters);
+		const finalRoutes = deepMergeRoutes(vueRoutes, asyncRouters)
+		console.log(finalRoutes);
 		formatAuthority(finalRoutes)
 		console.log(finalRoutes)
-
 		finalRoutes?.forEach((item) => {
 			router?.addRoute(item)
 		})

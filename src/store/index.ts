@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import router from './modules/router';
 import account from './modules/account'
 import setting from './modules/setting'
 
@@ -9,6 +10,7 @@ export default createStore({
 		}
 	},
 	modules: {
+		router,
 		account,
 		setting,
 	},

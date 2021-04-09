@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
 import RootView from '/@/layout/rootView'
+import formRouterChildren from './form.config';
 
 /**该文件用于配置需要layout布局的路由
  * 为了防止项目后期庞大
@@ -21,14 +22,16 @@ const root: RouteRecordRaw = {
 			},
 		},
 		{
-			path: 'basicForm',
-			name: 'basicForm',
-			component: () => import('/@/pages/basicForm'),
+			path: 'form',
+			name: 'form',
+			component: () => import('/@/layout/pageView'),
 			meta: {
-				title: '权限表单',
+				title: '表单',
 				role: ['admin'],
 			},
-		},
+			children: formRouterChildren
+		}
+
 	],
 }
 

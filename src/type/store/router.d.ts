@@ -7,6 +7,7 @@ export interface StoreRouter {
 
 export interface RoutesConfig {
   path?: string
+  name?: string,
   router: string
   icon?: string
   page?: any

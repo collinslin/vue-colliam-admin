@@ -27,26 +27,23 @@ function parseRoutes(
 		let vueRouter: any = undefined,
 			routeCfg = {} as RoutesConfig
 		if (typeof item == 'string') {
+			console.log(item);
+
 			vueRouter = vueRoutes.find((vueRoutesItem) => vueRoutesItem.name == item)
 			routeCfg = { path: vueRouter?.name as string, router: item }
 		} else {
 			vueRouter = vueRoutes.find(
 				(vueRoutesItem) => vueRoutesItem.name == item.router
 			)
-			if (item.router == 'root') {
-				item.router = '/'
-			}
 			routeCfg = item
 		}
-		console.log(vueRouter);
-		
 		if (vueRouter) {
 			const asyncRouter: RouteRecordRaw = {
 				path:
-					routeCfg.path || vueRouter?.name == 'root'
+					routeCfg.path || (vueRouter?.name == 'root'
 						? '/'
-						: vueRouter?.name || routeCfg.router,
-				name: vueRouter?.name,
+						: vueRouter?.name) || routeCfg.router,
+				name: routeCfg?.name || vueRouter?.name,
 				components: vueRouter?.components as any,
 				meta: {
 					authority:
@@ -80,6 +77,14 @@ function parseRoutes(
 			if (routeCfg.children && routeCfg.children.length > 0) {
 				asyncRouter.children = parseRoutes(vueRoutes, routeCfg.children)
 			}
+			console.log(item, 'item');
+
+			console.log(vueRouter, 'vueRouter');
+
+			console.log(routeCfg, 'routeCfg');
+
+			console.log(asyncRouter, 'asyncRouter');
+
 			asyncRouterMap.push(asyncRouter)
 		}
 	})
@@ -105,7 +110,11 @@ export function loadRoutes(routesConfig?: RoutesConfig[]) {
 		formatAuthority(finalRoutes)
 		console.log(finalRoutes)
 		finalRoutes?.forEach((item) => {
+			console.log(item, 'item');
+
 			router?.addRoute(item)
+			console.log(router?.getRoutes());
+
 		})
 	}
 

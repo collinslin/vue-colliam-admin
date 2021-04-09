@@ -8,6 +8,8 @@ const account: Module<Setting, any> = {
 	state() {
 		return {
 			menuData: [],
+			menuWidth: 210,
+			isCollapse: false,
 		}
 	},
 

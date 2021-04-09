@@ -3,14 +3,14 @@
 		<template v-if="!item.children">
 			<el-menu-item :index="resolvePath(item.path)">
 				<i class="el-icon-menu"></i>
-				<template #title>{{ item.name }}</template>
+				<template #title>{{ item.meta.title }}</template>
 			</el-menu-item>
 		</template>
 
 		<el-submenu v-else :index="resolvePath(item.path)">
 			<template #title>
 				<i class="el-icon-location"></i>
-				<span>{{ item.name }}</span>
+				<span>{{ item.meta.title }}</span>
 			</template>
 			<sidebar-item
 				v-for="child in item.children"

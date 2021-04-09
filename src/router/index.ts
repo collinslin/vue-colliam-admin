@@ -1,24 +1,9 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import RootView from '/@/layout/rootView'
+import root from './defautl.config'
 
+/**index文件用来配置不需要layout布局的页面 */
 const routes: Array<RouteRecordRaw> = [
-	{
-		path: '/',
-		name: 'root',
-		component: RootView,
-		redirect: '/login',
-		children: [
-			{
-				path: 'home',
-				name: 'home',
-				component: () => import('/@/pages/home/home.vue'),
-				meta: {
-					title: '首页',
-					role: ['click'],
-				},
-			},
-		],
-	},
+	root,
 	{
 		path: '/login',
 		name: 'login',

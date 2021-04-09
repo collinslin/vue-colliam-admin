@@ -1,52 +1,93 @@
 <template>
-	<el-container>
-		<el-aside class="menu-aside">
-			<Menu />
-		</el-aside>
-		<el-container>
-			<el-header>Header</el-header>
+	<div>
+		<Menu></Menu>
+		<div
+			class="vertical"
+			:style="{
+				marginLeft: `${verticalMargin}px`,
+				width: `${verticalWidth}px`,
+			}"
+		>
+			<el-header>
+				<Header></Header>
+			</el-header>
 			<el-main>
-				<router-view></router-view>
+				<el-scrollbar>
+					<PageView></PageView>
+				</el-scrollbar>
 			</el-main>
-		</el-container>
-	</el-container>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
 	import Menu from '/@/components/menu'
-	import { defineComponent } from '@vue/runtime-core'
+	import Header from '../header'
+	import PageView from '../pageView'
+	import {
+		computed,
+		defineComponent,
+		onMounted,
+		ref,
+		watch,
+	} from '@vue/runtime-core'
+	import { useStore } from 'vuex'
 
 	export default defineComponent({
 		nane: 'RootView',
-		components: { Menu },
+		components: { Menu, Header, PageView },
 		setup() {
-			return {}
+			const store = useStore()
+			const isCollapse = computed(() => store.state.setting.isCollapse)
+			const verticalMargin = computed(() => store.state.setting.menuWidth)
+			const verticalWidth = ref(window.innerWidth - verticalMargin.value)
+			onMounted(() => {
+				window.onresize = () => {
+					verticalWidth.value = window.innerWidth - verticalMargin.value
+					if (window.innerWidth < 700) {
+						store.state.setting.isCollapse = true
+						store.state.setting.menuWidth = 64
+					} else {
+						store.state.setting.isCollapse = false
+						store.state.setting.menuWidth = 210
+					}
+				}
+			})
+
+			watch(isCollapse, () => {
+				verticalWidth.value = window.innerWidth - verticalMargin.value
+			})
+			return {
+				verticalMargin,
+				verticalWidth,
+			}
 		},
 	})
 </script>
 
 <style lang="scss" scoped>
-	.menu-aside {
-		height: 100vh;
-		background-color: #fff;
+	.vertical {
+		position: fixed;
+		transition: all 0.28s;
+	}
+</style>
 
-		scrollbar-color: rgb(198, 226, 255);
-		scrollbar-width: thin;
-		-ms-overflow-style: none;
-		position: relative;
-		&::-webkit-scrollbar {
-			width: 6px;
-			height: 1px;
-		}
-		&::-webkit-scrollbar-thumb {
-			border-radius: 3px;
-			background: #0080ff;
-		}
-		&::-webkit-scrollbar-track {
-			-webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
-			box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
-			border-radius: 3px;
-			background: rgb(198, 226, 255);
-		}
+<style lang="scss" scoped>
+	//elementui
+	.el-header {
+		display: flex;
+		align-items: center;
+		padding: 0 20px;
+		background-color: #fff;
+		transition: all 0.28s;
+	}
+
+	.el-main {
+		height: calc(100vh - 56px);
+		overflow-y: auto;
+	}
+
+	.el-scrollbar {
+		background-color: #fff;
 	}
 </style>

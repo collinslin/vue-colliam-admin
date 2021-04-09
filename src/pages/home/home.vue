@@ -1,4 +1,46 @@
-<template>i am home page</template>
+<template>
+	<div>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+		<h1>i am home page</h1>
+	</div>
+</template>
 <script>
 	import { defineComponent } from 'vue'
 

@@ -18,6 +18,8 @@ import {
 	ElSubmenu,
 	ElMenuItem,
 	ElMenuItemGroup,
+	ElPopper,
+	ElScrollbar,
 } from 'element-plus'
 export const elComponents = [
 	ElButton,
@@ -38,5 +40,7 @@ export const elComponents = [
 	ElSubmenu,
 	ElMenuItem,
 	ElMenuItemGroup,
+	ElPopper,
+	ElScrollbar,
 ]
 export const elPlugins = [ElMessage]

@@ -2,7 +2,7 @@ import deepMerge from 'deepmerge'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 import { RunTimeOptions } from '../runTime'
 import { Authority } from '../type/store/account'
-import { RoutesConfig } from '/@/type/store/router';
+import { RoutesConfig } from '/@/type/store/router'
 
 //应用配置
 let appOptions: RunTimeOptions = {
@@ -18,28 +18,63 @@ export function setAppOptions(options: RunTimeOptions) {
 }
 
 /**初始化路由表 */
-function parseRoutes(vueRoutes: RouteRecordNormalized[], routesConfig: RoutesConfig[]) {
+function parseRoutes(
+	vueRoutes: RouteRecordNormalized[],
+	routesConfig: RoutesConfig[]
+) {
 	let asyncRouterMap: RouteRecordRaw[] = []
 	routesConfig.forEach((item: RoutesConfig | string) => {
-		let vueRouter: any = undefined, routeCfg = {} as RoutesConfig
+		let vueRouter: any = undefined,
+			routeCfg = {} as RoutesConfig
 		if (typeof item == 'string') {
 			vueRouter = vueRoutes.find((vueRoutesItem) => vueRoutesItem.name == item)
-			routeCfg = { path: vueRouter?.path as string, router: item }
+			routeCfg = { path: vueRouter?.name as string, router: item }
 		} else {
-			vueRouter = vueRoutes.find((vueRoutesItem) => vueRoutesItem.name == item.router)
+			vueRouter = vueRoutes.find(
+				(vueRoutesItem) => vueRoutesItem.name == item.router
+			)
+			if (item.router == 'root') {
+				item.router = '/'
+			}
 			routeCfg = item
 		}
+		console.log(vueRouter);
+		
 		if (vueRouter) {
 			const asyncRouter: RouteRecordRaw = {
-				path: vueRouter?.path as string,
+				path:
+					routeCfg.path || vueRouter?.name == 'root'
+						? '/'
+						: vueRouter?.name || routeCfg.router,
 				name: vueRouter?.name,
-				component: vueRouter?.components as any,
+				components: vueRouter?.components as any,
 				meta: {
-					authority: routeCfg?.authority || vueRouter?.authority || routeCfg.meta?.authority || vueRouter.meta?.authority || '*',
-					icon: routeCfg.icon || vueRouter.icon || routeCfg.meta?.icon || vueRouter.meta?.icon,
-					page: routeCfg.page || vueRouter.page || routeCfg.meta?.page || vueRouter.meta?.page,
-					link: routeCfg.link || vueRouter.link || routeCfg.meta?.link || vueRouter.meta?.link,
-					invisible: routeCfg.invisible || vueRouter.invisible || routeCfg.meta?.invisible || vueRouter.meta?.invisible,
+					authority:
+						routeCfg?.authority ||
+						vueRouter?.authority ||
+						routeCfg.meta?.authority ||
+						vueRouter.meta?.authority ||
+						'*',
+					icon:
+						routeCfg.icon ||
+						vueRouter.icon ||
+						routeCfg.meta?.icon ||
+						vueRouter.meta?.icon,
+					page:
+						routeCfg.page ||
+						vueRouter.page ||
+						routeCfg.meta?.page ||
+						vueRouter.meta?.page,
+					link:
+						routeCfg.link ||
+						vueRouter.link ||
+						routeCfg.meta?.link ||
+						vueRouter.meta?.link,
+					invisible:
+						routeCfg.invisible ||
+						vueRouter.invisible ||
+						routeCfg.meta?.invisible ||
+						vueRouter.meta?.invisible,
 				},
 			}
 			if (routeCfg.children && routeCfg.children.length > 0) {
@@ -47,7 +82,6 @@ function parseRoutes(vueRoutes: RouteRecordNormalized[], routesConfig: RoutesCon
 			}
 			asyncRouterMap.push(asyncRouter)
 		}
-
 	})
 	return asyncRouterMap
 }
@@ -59,15 +93,15 @@ export function loadRoutes(routesConfig?: RoutesConfig[]) {
 	const { router, store } = appOptions
 	const vueRoutes = router?.getRoutes() as RouteRecordNormalized[]
 	if (routesConfig) {
-		store?.commit('router/setRoutesConfig', routesConfig)
+		store?.commit('routerStore/setRoutesConfig', routesConfig)
 	} else {
-		routesConfig = store?.getters['router/routesConfig']
+		routesConfig = store?.getters['routerStore/routesConfig']
 	}
 	if (routesConfig && routesConfig.length > 0) {
 		const asyncRouters = parseRoutes(vueRoutes, routesConfig)
-		console.log(asyncRouters);
+		console.log(asyncRouters)
 		const finalRoutes = deepMergeRoutes(vueRoutes, asyncRouters)
-		console.log(finalRoutes);
+		console.log(finalRoutes)
 		formatAuthority(finalRoutes)
 		console.log(finalRoutes)
 		finalRoutes?.forEach((item) => {
@@ -76,7 +110,11 @@ export function loadRoutes(routesConfig?: RoutesConfig[]) {
 	}
 
 	const routesList = router?.getRoutes()
+	console.log(routesList)
+
 	const rootRoute = routesList?.find((item) => item.path === '/')
+	console.log(rootRoute)
+
 	const menuRoutes = rootRoute && rootRoute.children
 	console.log(menuRoutes)
 

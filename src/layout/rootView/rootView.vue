@@ -12,9 +12,14 @@
 				<Header></Header>
 			</el-header>
 			<el-main>
-				<el-scrollbar>
+				<template v-if="useElScrollbar">
+					<el-scrollbar>
+						<PageView></PageView>
+					</el-scrollbar>
+				</template>
+				<template v-else>
 					<PageView></PageView>
-				</el-scrollbar>
+				</template>
 			</el-main>
 		</div>
 	</div>
@@ -32,12 +37,14 @@
 		watch,
 	} from '@vue/runtime-core'
 	import { useStore } from 'vuex'
+	import { useRoute } from 'vue-router'
 
 	export default defineComponent({
 		nane: 'RootView',
 		components: { Menu, Header, PageView },
 		setup() {
 			const store = useStore()
+			const route = useRoute()
 			const isCollapse = computed(() => store.state.setting.isCollapse)
 			const verticalMargin = computed(() => store.state.setting.menuWidth)
 			const verticalWidth = ref(window.innerWidth - verticalMargin.value)
@@ -57,9 +64,18 @@
 			watch(isCollapse, () => {
 				verticalWidth.value = window.innerWidth - verticalMargin.value
 			})
+
+			const useElScrollbar = computed(() => {
+				if (route.meta.isAppView) {
+					return false
+				} else {
+					return true
+				}
+			})
 			return {
 				verticalMargin,
 				verticalWidth,
+				useElScrollbar,
 			}
 		},
 	})
@@ -84,7 +100,7 @@
 
 	.el-main {
 		height: calc(100vh - 56px);
-		overflow-y: auto;
+		overflow: hidden;
 	}
 
 	.el-scrollbar {

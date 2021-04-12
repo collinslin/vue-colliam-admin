@@ -37,12 +37,15 @@ function parseRoutes(
 		}
 		const asyncRouter: RouteRecordRaw = {
 			path:
-				routeCfg.link ||
-				routeCfg.path ||
+				(routeCfg.isAppView ? routeCfg.path : routeCfg.link) ||
 				(vueRouter?.name == 'root' ? '/' : vueRouter?.name) ||
 				routeCfg.router,
-			name: routeCfg?.name || vueRouter?.name,
-			components: vueRouter?.components as any,
+			name:
+				(routeCfg.isAppView ? `${routeCfg?.name}AppView` : routeCfg?.name) ||
+				vueRouter?.name,
+			components: routeCfg.isAppView
+				? { default: () => import('/@/pages/iframe') }
+				: (vueRouter?.components as any),
 			meta: {
 				title: routeCfg.name || vueRouter.meta.title,
 				authority:
@@ -71,11 +74,14 @@ function parseRoutes(
 					(vueRouter && vueRouter.invisible) ||
 					routeCfg.meta?.invisible ||
 					(vueRouter && vueRouter.meta?.invisible),
+				isAppView: routeCfg.isAppView,
 			},
 		}
 		if (routeCfg.children && routeCfg.children.length > 0) {
 			asyncRouter.children = parseRoutes(vueRoutes, routeCfg.children)
 		}
+		console.log(asyncRouter)
+
 		asyncRouterMap.push(asyncRouter)
 	})
 	return asyncRouterMap

@@ -2,6 +2,7 @@
 	<template v-if="!item.children">
 		<colliam-link
 			:to="resolvePath(item.path)"
+			:item="item"
 			@click="chooseMenuItem(resolvePath(item.path))"
 		>
 			<el-menu-item :index="resolvePath(item.path)">

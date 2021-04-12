@@ -15,10 +15,14 @@
 				type: String,
 				required: true,
 			},
+			item: {
+				type: Object,
+				required: true,
+			},
 		},
 		setup(props) {
 			const type = computed(() => {
-				if (isExternal(props.to)) {
+				if (isExternal(props.to) && !props.item.meta.isAppView) {
 					return 'a'
 				} else {
 					return 'router-link'
@@ -26,7 +30,7 @@
 			})
 
 			const linkProps = () => {
-				if (isExternal(props.to)) {
+				if (isExternal(props.to) && !props.item.meta.isAppView) {
 					return {
 						href: props.to,
 						target: '_blank',

@@ -12,14 +12,9 @@
 				<Header></Header>
 			</el-header>
 			<el-main>
-				<template v-if="useElScrollbar">
-					<el-scrollbar>
-						<PageView></PageView>
-					</el-scrollbar>
-				</template>
-				<template v-else>
+				<el-scrollbar>
 					<PageView></PageView>
-				</template>
+				</el-scrollbar>
 			</el-main>
 		</div>
 	</div>

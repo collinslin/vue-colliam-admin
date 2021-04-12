@@ -1,6 +1,7 @@
 import deepMerge from 'deepmerge'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 import { RunTimeOptions } from '../runTime'
+import { RouterGuards } from '../type/router/guards'
 import { Authority } from '/@/type/store/account'
 import { RoutesConfig } from '/@/type/store/router'
 
@@ -195,7 +196,29 @@ export function formatAuthority(
 	})
 }
 
+/**加载路由守卫
+ * @param guards
+ * @param options
+ */
+export function loadGuards(guards: RouterGuards, options: RunTimeOptions) {
+	const { beforeEach, afterEach } = guards
+	const { router } = options
+	beforeEach.forEach((beforeEachGuards) => {
+		if (beforeEachGuards && typeof beforeEachGuards === 'function') {
+			router?.beforeEach((to, from, next) =>
+				beforeEachGuards(to, from, next, options)
+			)
+		}
+	})
+	afterEach.forEach((afterEachGuards) => {
+		if (afterEachGuards && typeof afterEachGuards === 'function') {
+			router?.afterEach((to, from) => afterEachGuards(to, from, options))
+		}
+	})
+}
+
 export default {
 	loadRoutes,
+	loadGuards,
 	formatAuthority,
 }

@@ -1,7 +1,8 @@
 import { App } from '@vue/runtime-core'
 import { Router } from 'vue-router'
+import guards from '/@/router/guards'
 import { Store } from 'vuex'
-import { loadRoutes, setAppOptions } from './utils/routerUtils'
+import { loadRoutes, setAppOptions, loadGuards } from './utils/routerUtils'
 import directiveList from '/@/utils/directive'
 
 export interface RunTimeOptions {
@@ -21,7 +22,7 @@ function runTime(
 	// 加载路由
 	loadRoutes()
 	// 加载路由守卫
-	// loadGuards(guards, { router, store, message })
+	loadGuards(guards, { router, store, message })
 	//加载自定义指令
 	directiveList.forEach((directive) => {
 		app.directive(directive.name, directive.option)

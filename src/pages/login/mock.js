@@ -23,7 +23,7 @@ const data = [
 				router: 'baidu',
 				path: 'baidu',
 				name: '百度',
-				icon: 'el-icon-link',
+				icon: 'el-icon-connection',
 				link: 'https://www.baidu.com',
 				isAppView: true,
 			},

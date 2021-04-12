@@ -1,5 +1,5 @@
 <template>
-	<iframe :src="src" frameborder="0" style="width: 100%; height: 100%"></iframe>
+	<iframe :src="src" frameborder="0"></iframe>
 </template>
 
 <script>
@@ -21,10 +21,7 @@
 
 <style lang="scss">
 	iframe {
-		html,
-		body {
-			width: 100%;
-			height: 100%;
-		}
+		width: 100%;
+		height: calc(100vh - 100px);
 	}
 </style>

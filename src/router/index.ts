@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import root from './defautl.config'
+import root from './config/defautl.config'
 
 /**index文件用来配置不需要layout布局的页面 */
 const routes: Array<RouteRecordRaw> = [

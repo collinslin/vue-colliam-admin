@@ -10,7 +10,7 @@
 	})
 </script>
 
-<style>
+<style lang="scss">
 	body {
 		margin: 0;
 	}

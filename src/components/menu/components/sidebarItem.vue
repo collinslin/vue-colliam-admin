@@ -1,63 +1,79 @@
 <template>
-  <template v-if="!item.children">
-    <el-menu-item :index="resolvePath(item.path)">
-      <i class="el-icon-menu"></i>
-      <template #title>{{ item.name }}</template>
-    </el-menu-item>
-  </template>
+	<template v-if="!item.children">
+		<colliam-link
+			:to="resolvePath(item.path)"
+			@click="chooseMenuItem(resolvePath(item.path))"
+		>
+			<el-menu-item :index="resolvePath(item.path)">
+				<i :class="item.meta.icon"></i>
+				<template #title>{{ item.name }}</template>
+			</el-menu-item>
+		</colliam-link>
+	</template>
 
-  <el-submenu v-else :index="resolvePath(item.path)">
-    <template #title>
-      <i class="el-icon-location"></i>
-      <span>{{ item.name }}</span>
-    </template>
-    <sidebar-item
-      v-for="child in item.children"
-      :key="child.path"
-      :item="child"
-      :basePath="resolvePath(child.path)"
-    ></sidebar-item>
-  </el-submenu>
+	<el-submenu v-else :index="resolvePath(item.path)">
+		<template #title>
+			<i :class="item.meta.icon"></i>
+			<span>{{ item.name }}</span>
+		</template>
+		<sidebar-item
+			v-for="child in item.children"
+			:key="child.path"
+			:item="child"
+			:basePath="resolvePath(child.path)"
+		></sidebar-item>
+	</el-submenu>
 </template>
 
 <script lang="ts">
-  import { defineComponent, onMounted } from '@vue/runtime-core'
-  import { useRouter } from 'vue-router'
-  import { isExternal } from '/@/utils/utils'
-  export default defineComponent({
-    name: 'SidebarItem',
-    props: {
-      item: {
-        type: Object,
-        required: true,
-      },
-      basePath: {
-        type: String,
-        default: '',
-      },
-    },
-    setup(props) {
-      const router = useRouter()
-      const routesList = router.getRoutes()
-      const resolvePath = (routerPath: string) => {
-        if (isExternal(routerPath)) {
-          return routerPath
-        }
-        if (isExternal(props.basePath)) {
-          return props.basePath
-        }
-        return routesList.find((route) => route.name == props.item.name)?.path
-      }
+	import ColliamLink from './colliamLink.vue'
+	import { ComputedRef, defineComponent, inject } from '@vue/runtime-core'
+	import { RouteRecordRaw, useRouter } from 'vue-router'
+	import { isExternal } from '/@/utils/utils'
 
-      onMounted(() => {
-        console.log(routesList, '5546')
-      })
+	export default defineComponent({
+		name: 'sidebarItem',
+		components: {
+			ColliamLink,
+		},
+		props: {
+			item: {
+				type: Object,
+				required: true,
+			},
+			basePath: {
+				type: String,
+				default: '',
+			},
+		},
+		setup(props) {
+			const menuData = inject('menuData') as ComputedRef<RouteRecordRaw[]>
+			const router = useRouter()
+			const routesList = router.getRoutes()
+			const resolvePath = (routerPath: string) => {
+				if (isExternal(routerPath)) {
+					return routerPath
+				}
+				if (isExternal(props.basePath)) {
+					return props.basePath
+				}
+				return routesList.find((route) => route.name == props.item.name)?.path
+			}
 
-      return {
-        resolvePath,
-      }
-    },
-  })
+			const chooseMenuItem = (path: string) => {
+				menuData.value.forEach((route: RouteRecordRaw | any) => {
+					if (!path.includes(route.path)) {
+						route.active = false
+					}
+				})
+			}
+
+			return {
+				resolvePath,
+				chooseMenuItem,
+			}
+		},
+	})
 </script>
 
 <style lang="scss" scoped></style>

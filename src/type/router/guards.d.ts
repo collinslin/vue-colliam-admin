@@ -1,7 +1,6 @@
 import { ComponentPublicInstance } from '@vue/runtime-core'
 
 import {
-	NavigationFailure,
 	NavigationGuardNext,
 	RouteLocationNormalized,
 	RouteLocationRaw,

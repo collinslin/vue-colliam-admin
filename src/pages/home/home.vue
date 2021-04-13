@@ -1,44 +1,7 @@
 <template>
 	<div>
 		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
-		<h1>i am home page</h1>
+		<input type="text" name="" id="" />
 	</div>
 </template>
 <script>

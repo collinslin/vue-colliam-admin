@@ -8,6 +8,7 @@ const account: Module<Setting, any> = {
 	state() {
 		return {
 			menuData: [],
+			tabbarData: [],
 			menuWidth: 210,
 			isCollapse: false,
 		}

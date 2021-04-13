@@ -19,6 +19,7 @@ const root: RouteRecordRaw = {
 			meta: {
 				title: '首页',
 				icon: 'el-icon-s-home',
+				keepAlive: true,
 				role: ['click'],
 			},
 		},

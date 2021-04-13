@@ -1,16 +1,25 @@
 <template>
 	<router-view v-slot="{ Component }">
 		<transition name="first">
-			<component :is="Component" />
+			<keep-alive :max="5" :include="include" :exclude="exclude">
+				<component :is="Component" />
+			</keep-alive>
 		</transition>
 	</router-view>
 </template>
 
 <script>
-	import { defineComponent } from 'vue'
+	import { useStore } from 'vuex'
+	import { computed, defineComponent } from 'vue'
 
 	export default defineComponent({
 		name: 'PageView',
+		setup() {
+			const store = useStore()
+			const include = computed(() => store.state.routerStore.keepAliveInclude)
+			const exclude = computed(() => store.state.routerStore.keepAliveExclude)
+			return { include, exclude }
+		},
 	})
 </script>
 

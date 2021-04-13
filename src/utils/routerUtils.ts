@@ -1,5 +1,6 @@
 import deepMerge from 'deepmerge'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
+import { Store } from 'vuex'
 import { RunTimeOptions } from '../runTime'
 import { RouterGuards } from '../type/router/guards'
 import { Authority } from '/@/type/store/account'
@@ -51,38 +52,38 @@ function parseRoutes(
 				title: routeCfg.name || vueRouter.meta.title,
 				authority:
 					routeCfg?.authority ||
-					(vueRouter && vueRouter?.authority) ||
 					routeCfg.meta?.authority ||
 					(vueRouter && vueRouter.meta?.authority) ||
 					'*',
 				icon:
 					routeCfg.icon ||
-					(vueRouter && vueRouter.icon) ||
 					routeCfg.meta?.icon ||
 					(vueRouter && vueRouter.meta?.icon),
 				page:
 					routeCfg.page ||
-					(vueRouter && vueRouter.page) ||
 					routeCfg.meta?.page ||
 					(vueRouter && vueRouter.meta?.page),
 				link:
 					routeCfg.link ||
-					(vueRouter && vueRouter.link) ||
 					routeCfg.meta?.link ||
 					(vueRouter && vueRouter.meta?.link),
 				invisible:
 					routeCfg.invisible ||
-					(vueRouter && vueRouter.invisible) ||
 					routeCfg.meta?.invisible ||
 					(vueRouter && vueRouter.meta?.invisible),
-				isAppView: routeCfg.isAppView,
+				isAppView:
+					routeCfg.isAppView ||
+					(vueRouter && vueRouter.meta.isAppView) ||
+					false,
+				keepAlive:
+					routeCfg.keepAlive ||
+					(vueRouter && vueRouter.meta.keepAlive) ||
+					false,
 			},
 		}
 		if (routeCfg.children && routeCfg.children.length > 0) {
 			asyncRouter.children = parseRoutes(vueRoutes, routeCfg.children)
 		}
-		console.log(asyncRouter)
-
 		asyncRouterMap.push(asyncRouter)
 	})
 	return asyncRouterMap
@@ -111,9 +112,22 @@ export function loadRoutes(routesConfig?: RoutesConfig[]) {
 	const routesList = router?.getRoutes()
 	const rootRoute = routesList?.find((item) => item.path === '/')
 	const menuRoutes = rootRoute && rootRoute.children
+	initKeepAliveComponents(menuRoutes, store)
 	if (menuRoutes) {
 		store?.commit('setting/setMenuData', menuRoutes)
 	}
+}
+
+/**初始化需要持久化的组件 */
+function initKeepAliveComponents(
+	menuRoutes?: RouteRecordRaw[],
+	store?: Store<any>
+) {
+	menuRoutes?.forEach((item) => {
+		if (item.meta?.keepAlive) {
+			store?.state.routerStore.keepAliveInclude.push(item.name)
+		}
+	})
 }
 
 /**合并路由 */

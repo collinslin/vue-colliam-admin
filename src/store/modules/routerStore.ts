@@ -7,6 +7,7 @@ const routerStore: Module<StoreRouter, any> = {
 	state() {
 		return {
 			routesConfig: null,
+			keepAliveInclude: [],
 		}
 	},
 

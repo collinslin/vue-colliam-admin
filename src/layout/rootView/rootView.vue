@@ -4,7 +4,7 @@
 		<div
 			class="vertical"
 			:style="{
-				marginLeft: `${verticalMargin}px`,
+				marginLeft: `${menuWidth}px`,
 				width: `${verticalWidth}px`,
 			}"
 		>
@@ -12,6 +12,7 @@
 				<Header></Header>
 			</el-header>
 			<el-main>
+				<Tabbar></Tabbar>
 				<el-scrollbar>
 					<PageView></PageView>
 				</el-scrollbar>
@@ -24,6 +25,7 @@
 	import Menu from '/@/components/menu'
 	import Header from '../header'
 	import PageView from '../pageView'
+	import Tabbar from '../tabbar'
 	import {
 		computed,
 		defineComponent,
@@ -36,16 +38,17 @@
 
 	export default defineComponent({
 		nane: 'RootView',
-		components: { Menu, Header, PageView },
+		components: { Menu, Header, PageView, Tabbar },
 		setup() {
 			const store = useStore()
 			const route = useRoute()
 			const isCollapse = computed(() => store.state.setting.isCollapse)
-			const verticalMargin = computed(() => store.state.setting.menuWidth)
-			const verticalWidth = ref(window.innerWidth - verticalMargin.value)
+			const menuWidth = computed(() => store.state.setting.menuWidth)
+			const verticalWidth = ref(window.innerWidth - menuWidth.value)
+
 			onMounted(() => {
 				window.onresize = () => {
-					verticalWidth.value = window.innerWidth - verticalMargin.value
+					verticalWidth.value = window.innerWidth - menuWidth.value
 					if (window.innerWidth < 700) {
 						store.state.setting.isCollapse = true
 						store.state.setting.menuWidth = 64
@@ -57,7 +60,7 @@
 			})
 
 			watch(isCollapse, () => {
-				verticalWidth.value = window.innerWidth - verticalMargin.value
+				verticalWidth.value = window.innerWidth - menuWidth.value
 			})
 
 			const useElScrollbar = computed(() => {
@@ -67,8 +70,9 @@
 					return true
 				}
 			})
+
 			return {
-				verticalMargin,
+				menuWidth,
 				verticalWidth,
 				useElScrollbar,
 			}
@@ -94,7 +98,8 @@
 	}
 
 	.el-main {
-		height: calc(100vh - 56px);
+		height: calc(100vh - 76px);
+		padding: 10px 20px;
 		overflow: hidden;
 	}
 

@@ -1,7 +1,8 @@
 import { RouteRecordRaw } from 'vue-router'
 
 export interface StoreRouter {
-	routesConfig?: null | RouteRecordRaw[]
+	routesConfig: null | RouteRecordRaw[]
+	keepAliveInclude: string | RegExp | Array<string | RegExp>
 	[key: string]: any
 }
 
@@ -15,6 +16,7 @@ export interface RoutesConfig {
 	authority?: string
 	invisible?: boolean
 	isAppView?: boolean
+	keepAlive?: boolean
 	meta?: {
 		icon?: string
 		page?: any
@@ -22,6 +24,7 @@ export interface RoutesConfig {
 		authority?: string
 		invisible?: boolean
 		isAppView?: boolean
+		keepAlive?: boolean
 	}
 	children?: RoutesConfig[]
 }

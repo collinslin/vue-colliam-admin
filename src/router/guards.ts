@@ -29,6 +29,13 @@ const addTabbar: AppBeforeEach = (to, form, next) => {
 		if (!inTabbar) {
 			store.state.setting?.tabbarData.push(to)
 		}
+		tabbarData?.forEach((tabbar) => {
+			if (tabbar.path == to.path) {
+				tabbar.active = true
+			} else {
+				tabbar.active = false
+			}
+		})
 	}
 	next()
 }

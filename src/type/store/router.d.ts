@@ -25,6 +25,7 @@ export interface RoutesConfig {
 		invisible?: boolean
 		isAppView?: boolean
 		keepAlive?: boolean
+		isCloseTabbar?: boolean
 	}
 	children?: RoutesConfig[]
 }

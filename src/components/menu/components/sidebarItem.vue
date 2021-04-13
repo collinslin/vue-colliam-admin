@@ -31,7 +31,6 @@
 	import { ComputedRef, defineComponent, inject } from '@vue/runtime-core'
 	import { RouteRecordRaw, useRouter } from 'vue-router'
 	import { isExternal } from '/@/utils/utils'
-	import { useStore } from 'vuex'
 
 	export default defineComponent({
 		name: 'sidebarItem',
@@ -50,7 +49,6 @@
 		},
 		setup(props) {
 			const menuData = inject('menuData') as ComputedRef<RouteRecordRaw[]>
-			const store = useStore()
 			const router = useRouter()
 			const routesList = router.getRoutes()
 			const resolvePath = (routerPath: string) => {

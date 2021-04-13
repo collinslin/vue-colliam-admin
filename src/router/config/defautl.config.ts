@@ -20,6 +20,7 @@ const root: RouteRecordRaw = {
 				title: '首页',
 				icon: 'el-icon-s-home',
 				keepAlive: true,
+				isCloseTabbar: false,
 				role: ['click'],
 			},
 		},

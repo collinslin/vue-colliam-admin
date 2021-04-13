@@ -79,6 +79,10 @@ function parseRoutes(
 					routeCfg.keepAlive ||
 					(vueRouter && vueRouter.meta.keepAlive) ||
 					false,
+				isCloseTabbar:
+					vueRouter && vueRouter.meta.isCloseTabbar
+						? vueRouter.meta.isCloseTabbar
+						: true,
 			},
 		}
 		if (routeCfg.children && routeCfg.children.length > 0) {

@@ -28,13 +28,15 @@
 	import Tabbar from '../tabbar'
 	import {
 		computed,
+		ComputedRef,
 		defineComponent,
 		onMounted,
+		provide,
 		ref,
 		watch,
 	} from '@vue/runtime-core'
 	import { useStore } from 'vuex'
-	import { useRoute } from 'vue-router'
+	import { RouteRecordRaw, useRoute } from 'vue-router'
 
 	export default defineComponent({
 		nane: 'RootView',
@@ -45,6 +47,10 @@
 			const isCollapse = computed(() => store.state.setting.isCollapse)
 			const menuWidth = computed(() => store.state.setting.menuWidth)
 			const verticalWidth = ref(window.innerWidth - menuWidth.value)
+
+			const menuData: ComputedRef<RouteRecordRaw[]> = computed(
+				() => store.state.setting.menuData
+			)
 
 			onMounted(() => {
 				window.onresize = () => {
@@ -62,6 +68,8 @@
 			watch(isCollapse, () => {
 				verticalWidth.value = window.innerWidth - menuWidth.value
 			})
+
+			provide('menuData', menuData)
 
 			const useElScrollbar = computed(() => {
 				if (route.meta.isAppView) {

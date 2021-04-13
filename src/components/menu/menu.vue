@@ -32,6 +32,7 @@
 		ref,
 		provide,
 		ComputedRef,
+		inject,
 	} from '@vue/runtime-core'
 	import { RouteRecordRaw, useRoute } from 'vue-router'
 	import { useStore } from 'vuex'
@@ -42,16 +43,14 @@
 		components: { sidebarItem },
 		setup() {
 			const store = useStore()
-			const menuData: ComputedRef<RouteRecordRaw[]> = computed(
-				() => store.state.setting.menuData
-			)
 			const route = useRoute()
-			const defaultActive = ref(route.path)
+			const menuData = inject('menuData') as ComputedRef<RouteRecordRaw[]>
+			// const defaultActive = ref(route.path)
+			const defaultActive = computed(() => route.path)
 			const openMenu = (menuRoute: string) => {
 				menuData.value.forEach((route: RouteRecordRaw | any) => {
 					if (`/${route.path}` === menuRoute) {
 						route.active = true
-						defaultActive.value = route.path
 					} else {
 						route.active = false
 					}
@@ -59,7 +58,6 @@
 			}
 			const isCollapse = computed(() => store.state.setting.isCollapse)
 			const menuWidth = computed(() => store.state.setting.menuWidth + 'px')
-			provide('menuData', menuData)
 			return { isCollapse, menuWidth, menuData, defaultActive, openMenu }
 		},
 	})

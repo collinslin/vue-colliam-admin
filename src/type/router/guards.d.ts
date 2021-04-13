@@ -14,11 +14,13 @@ declare type NavigationGuardReturn =
 	| RouteLocationRaw
 	| boolean
 	| NavigationGuardNextCallback
-
+interface AppBeforeEachRoute extends RouteLocationNormalized {
+	active?: boolean
+}
 interface AppBeforeEach {
 	(
-		to: RouteLocationNormalized,
-		from: RouteLocationNormalized,
+		to: AppBeforeEachRoute,
+		from: AppBeforeEachRoute,
 		next: NavigationGuardNext,
 		options: RunTimeOptions
 	): NavigationGuardReturn | Promise<NavigationGuardReturn>

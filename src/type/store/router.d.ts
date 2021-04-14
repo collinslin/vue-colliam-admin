@@ -1,8 +1,8 @@
-import { RouteRecordRaw } from 'vue-router'
+import { RouteRecordName, RouteRecordRaw } from 'vue-router'
 
 export interface StoreRouter {
 	routesConfig: null | RouteRecordRaw[]
-	keepAliveInclude: string | RegExp | Array<string | RegExp>
+	keepAliveInclude: RouteRecordName[]
 	[key: string]: any
 }
 

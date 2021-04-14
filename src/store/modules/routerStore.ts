@@ -33,6 +33,9 @@ const routerStore: Module<StoreRouter, any> = {
 				JSON.stringify(routesConfig)
 			)
 		},
+		setKeepAliveInclude(state, target: string[]) {
+			state.keepAliveInclude = target
+		},
 	},
 }
 

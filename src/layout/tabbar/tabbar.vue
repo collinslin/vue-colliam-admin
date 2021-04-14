@@ -1,180 +1,245 @@
 <template>
-  <el-tabs
-    class="my-tabs"
-    v-model="tabbarDataValue"
-    type="card"
-    @tab-click="chooseTabbar"
-    @tab-remove="removeTabbar"
-    @contextmenu.prevent="showTabbarMenu"
-  >
-    <el-tab-pane
-      v-for="item in tabbarData"
-      :key="item.path"
-      :label="item.name"
-      :name="item.path"
-      :closable="item.meta.isCloseTabbar == false ? false : true"
-    >
-    </el-tab-pane>
-  </el-tabs>
-  <transition name="el-zoom-in-top">
-    <TabbarMenu
-      :left="left"
-      v-show="isShow"
-      @choose-tabbar-menu="chooseTabbarMenu"
-    ></TabbarMenu>
-  </transition>
+	<el-tabs
+		class="my-tabs"
+		v-model="tabbarDataValue"
+		type="card"
+		@tab-click="chooseTabbar"
+		@tab-remove="removeTabbar"
+		@contextmenu.prevent="showTabbarMenu"
+	>
+		<el-tab-pane
+			v-for="item in tabbarData"
+			:key="item.path"
+			:label="item.name"
+			:name="item.path"
+			:closable="item.meta.isCloseTabbar == false ? false : true"
+		>
+		</el-tab-pane>
+	</el-tabs>
+	<transition name="el-zoom-in-top">
+		<TabbarMenu
+			:left="left"
+			v-show="isShow"
+			@choose-tabbar-menu="chooseTabbarMenu"
+		></TabbarMenu>
+	</transition>
 </template>
 
 <script lang="ts">
-  import {
-    computed,
-    ComputedRef,
-    defineComponent,
-    inject,
-    onMounted,
-    onUnmounted,
-    ref,
-  } from '@vue/runtime-core'
-  import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
-  import { useStore } from 'vuex'
-  import { Index } from '/@/type/store'
-  import TabbarMenu from './tabbarMenu.vue'
-  import { ElMessage } from 'element-plus'
+	import {
+		computed,
+		ComputedRef,
+		defineComponent,
+		inject,
+		onMounted,
+		onUnmounted,
+		ref,
+	} from '@vue/runtime-core'
+	import {
+		RouteRecordName,
+		RouteRecordRaw,
+		useRoute,
+		useRouter,
+	} from 'vue-router'
+	import { useStore } from 'vuex'
+	import { Index } from '/@/type/store'
+	import TabbarMenu from './tabbarMenu.vue'
+	import { ElMessage } from 'element-plus'
+	import { tabbarData } from '/@/type/store/setting'
+	import arrRemove from 'lodash/remove'
 
-  export default defineComponent({
-    name: 'Tabbar',
-    components: { TabbarMenu },
-    setup() {
-      const store = useStore<Index>()
-      const route = useRoute()
-      const router = useRouter()
+	export default defineComponent({
+		name: 'Tabbar',
+		components: { TabbarMenu },
+		setup() {
+			const store = useStore<Index>()
+			const route = useRoute()
+			const router = useRouter()
 
-      const menuData = inject('menuData') as ComputedRef<RouteRecordRaw[]>
+			const menuData = inject('menuData') as ComputedRef<RouteRecordRaw[]>
 
-      const tabbarDataValue = computed({
-        get: () => route.path,
-        set: () => route.path,
-      })
+			/**当前激活的tabbarItem */
+			const tabbarDataValue = computed({
+				get: () => route.path,
+				set: () => route.path,
+			})
 
-      const tabbarData = computed(() => store.state.setting?.tabbarData)
+			/**tabbar列表 */
+			const tabbarData = computed(
+				() => store.state.setting?.tabbarData
+			) as ComputedRef<tabbarData[]>
 
-      const chooseTabbar = (tabbar: any) => {
-        router.push(tabbar.props.name)
-      }
+			/**tabbarItem的点击事件 */
+			const chooseTabbar = (tabbar: any) => {
+				changeMenuStyle(tabbar.props.name)
+				router.push(tabbar.props.name)
+			}
 
-      const removeTabbar = (path: string) => {
-        if (path.includes('home')) {
-          ElMessage({
-            message: '首页无法删除',
-            type: 'error',
-          })
-          return
-        }
-        menuData.value.forEach((menu: RouteRecordRaw | any) => {
-          if (path.includes(menu.path)) {
-            menu.active = false
-          } else {
-            menu.active = true
-          }
-        })
-        if (store.state.setting) {
-          const index = store.state.setting.tabbarData.findIndex(
-            (item) => item.path == path
-          )
-          index != -1 && store.state.setting.tabbarData.splice(index, 1)
+			/**tabbarItem的删除事件 */
+			const removeTabbar = (path: string) => {
+				if (path.includes('home')) {
+					ElMessage({
+						message: '首页无法删除',
+						type: 'error',
+					})
+					return
+				}
+				const index = findTargetIndex(path) as number
+				index && index != -1 && tabbarData.value.splice(index, 1)
+				if (tabbarDataValue.value === path) {
+					const pushPath = tabbarData.value[index - 1].path as string
+					changeMenuStyle(pushPath)
+					router.push(pushPath)
+				}
+			}
 
-          const pushPath =
-            store.state.setting.tabbarData[
-              store.state.setting.tabbarData.length - 1
-            ].path
-          router.push(pushPath)
-        }
-      }
+			/**tabbar菜单栏的删除左侧和右侧事件 */
+			const deleteLR = (targetPath: string, type: number) => {
+				const index = findTargetIndex(targetPath)
+				const spliceList = type
+					? tabbarData.value.splice(index + 1, tabbarData.value.length)
+					: tabbarData.value.splice(1, index - 1)
+				spliceList?.forEach((item) => {
+					if (item.active) {
+						changeMenuStyle(targetPath)
+						router.push(targetPath)
+					}
+				})
+			}
 
-      const isShow = ref(false)
-      const left = ref(0)
-      const showTabbarMenu = (e: MouseEvent) => {
-        const target = e.target as HTMLElement
-        const ElOffsetLeft = target.offsetLeft
-        const ElOffsetWidth = target.offsetWidth / 2
-        left.value = ElOffsetLeft + ElOffsetWidth - 60
-        isShow.value = true
-      }
+			/**找到对应tabbarItem的index */
+			const findTargetIndex = (path: string): number => {
+				const index = tabbarData.value.findIndex(
+					(item) => item.path == path
+				) as number
+				return index
+			}
 
-      const refresh = () => {}
-      const myDelete = () => {
-        return removeTabbar(route.path)
-      }
-      const typeList: { [key: string]: any } = {
-        refresh,
-        myDelete,
-      }
-      const chooseTabbarMenu = (type: string) => {
-        typeList[type] && typeList[type]()
-      }
+			/**用于更改菜单栏的样式 */
+			const changeMenuStyle = (path: string) => {
+				menuData.value.forEach((menu: RouteRecordRaw | any) => {
+					if (path.includes(menu.path)) {
+						menu.active = true
+					} else {
+						menu.active = false
+					}
+				})
+			}
 
-      onMounted(() => {
-        window.addEventListener('click', () => {
-          isShow.value = false
-        })
-      })
+			/**tabbar右击事件 */
+			const isShow = ref(false)
+			const left = ref(0)
+			let targetPath = ''
+			const showTabbarMenu = (e: MouseEvent) => {
+				const target = e.target as HTMLElement
+				const targetClassList = Array(target.classList)
+				if (targetClassList[0][0] == 'el-tabs__item') {
+					const ElOffsetLeft = target.offsetLeft
+					const ElOffsetWidth = target.offsetWidth / 2
+					left.value = ElOffsetLeft + ElOffsetWidth - 60
+					const targetID = target.id
+					targetPath = targetID.split('tab-')[1]
+					isShow.value = true
+				}
+			}
+			/**tabbar菜单栏的Item点击事件 */
+			const typeList: { [key: string]: (targetPath: string) => void } = {
+				refresh: (targetPath) => {
+					const routerList = router.getRoutes()
+					const target = routerList.find((item) => item.path == targetPath)
+					const flag = store.state.routerStore?.keepAliveInclude.findIndex(
+						(item) => item == target?.name
+					) as number
+					if (flag > -1) {
+						store.state.routerStore?.keepAliveInclude.splice(flag, 1)
+					}
+					router.replace({ path: `/redirect${targetPath}`, query: route.query })
+				},
+				myDelete: (targetPath) => removeTabbar(targetPath),
+				deleteLeft: (targetPath) => deleteLR(targetPath, 0),
+				deleteRight: (targetPath) => deleteLR(targetPath, 1),
+				deleteAll: (targetPath) => {
+					const targetIndex = findTargetIndex(targetPath)
+					const target = tabbarData.value.find(
+						(item, index) => targetIndex == index
+					)
+					if (store.state.setting) {
+						store.state.setting.tabbarData = target
+							? [tabbarData.value[0], target]
+							: [tabbarData.value[0]]
+						if (!target?.active) {
+							changeMenuStyle(targetPath)
+							router.push(targetPath)
+						}
+					}
+				},
+			}
+			const chooseTabbarMenu = (type: string) => {
+				typeList[type] && typeList[type](targetPath)
+			}
 
-      onUnmounted(() => {
-        window.removeEventListener('click', () => {})
-      })
+			onMounted(() => {
+				window.addEventListener('click', () => {
+					isShow.value = false
+				})
+			})
 
-      return {
-        route,
-        tabbarDataValue,
-        tabbarData,
-        chooseTabbar,
-        removeTabbar,
-        isShow,
-        left,
-        chooseTabbarMenu,
-        showTabbarMenu,
-      }
-    },
-  })
+			onUnmounted(() => {
+				window.removeEventListener('click', () => {})
+			})
+
+			return {
+				route,
+				tabbarDataValue,
+				tabbarData,
+				chooseTabbar,
+				removeTabbar,
+				isShow,
+				left,
+				chooseTabbarMenu,
+				showTabbarMenu,
+			}
+		},
+	})
 </script>
 
 <style lang="scss" scoped></style>
 <style lang="scss" scoped>
-  //element-ui
-  :deep(.el-tabs__header) {
-    margin: 0;
-    border: none !important;
-  }
-  :deep(.el-tabs__nav) {
-    border: none !important;
-  }
-  :deep(.el-tabs__item) {
-    height: 30px;
-    border-right-color: beige;
-    background-color: #ccdff2;
-    line-height: 30px;
-    margin: 0 2px;
-    border: none !important;
-    transition: all 0.3s !important;
-    &::before {
-      content: '';
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background-color: rgb(10, 204, 114);
-      border-radius: 50%;
-      opacity: 0;
-      transition: all 0.2s;
-    }
-    &:hover {
-      background-color: #fff !important;
-    }
-  }
-  :deep(.is-active) {
-    background-color: #fff !important;
-    &::before {
-      opacity: 1;
-      transform: translateX(-7px);
-    }
-  }
+	//element-ui
+	:deep(.el-tabs__header) {
+		margin: 0;
+		border: none !important;
+	}
+	:deep(.el-tabs__nav) {
+		border: none !important;
+	}
+	:deep(.el-tabs__item) {
+		height: 30px;
+		border-right-color: beige;
+		background-color: #ccdff2;
+		line-height: 30px;
+		margin: 0 2px;
+		border: none !important;
+		transition: all 0.3s !important;
+		&::before {
+			content: '';
+			display: inline-block;
+			width: 10px;
+			height: 10px;
+			background-color: rgb(10, 204, 114);
+			border-radius: 50%;
+			opacity: 0;
+			transition: all 0.2s;
+		}
+		&:hover {
+			background-color: #fff !important;
+		}
+	}
+	:deep(.is-active) {
+		background-color: #fff !important;
+		&::before {
+			opacity: 1;
+			transform: translateX(-7px);
+		}
+	}
 </style>

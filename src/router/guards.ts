@@ -23,11 +23,15 @@ const progressStart: AppBeforeEach = (to, from, next) => {
 
 /**添加Tabbar */
 const addTabbar: AppBeforeEach = (to, form, next) => {
-	if (!to.path.includes('/login')) {
+	if (!to.path.includes('login') && !to.path.includes('redirect')) {
 		const tabbarData = store.state.setting?.tabbarData
 		const inTabbar = tabbarData?.find((tabbar) => tabbar.path == to.path)
 		if (!inTabbar) {
-			store.state.setting?.tabbarData.push(to)
+			if (to.path.includes('home')) {
+				store.state.setting?.tabbarData.unshift(to)
+			} else {
+				store.state.setting?.tabbarData.push(to)
+			}
 		}
 		tabbarData?.forEach((tabbar) => {
 			if (tabbar.path == to.path) {

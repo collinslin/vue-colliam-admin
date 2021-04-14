@@ -4,7 +4,7 @@ import { Setting } from './setting'
 
 export interface Index {
 	account?: Account
-	routerSotre?: StoreRouter
+	routerStore?: StoreRouter
 	setting?: Setting
 	[key: string]: any
 }

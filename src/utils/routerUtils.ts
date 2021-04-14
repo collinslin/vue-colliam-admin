@@ -3,6 +3,7 @@ import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 import { Store } from 'vuex'
 import { RunTimeOptions } from '../runTime'
 import { RouterGuards } from '../type/router/guards'
+import { Index } from '../type/store'
 import { Authority } from '/@/type/store/account'
 import { RoutesConfig } from '/@/type/store/router'
 
@@ -125,11 +126,11 @@ export function loadRoutes(routesConfig?: RoutesConfig[]) {
 /**初始化需要持久化的组件 */
 function initKeepAliveComponents(
 	menuRoutes?: RouteRecordRaw[],
-	store?: Store<any>
+	store?: Store<Index>
 ) {
 	menuRoutes?.forEach((item) => {
-		if (item.meta?.keepAlive) {
-			store?.state.routerStore.keepAliveInclude.push(item.name)
+		if (item.meta?.keepAlive && item.name) {
+			store?.state.routerStore?.keepAliveInclude.push(item.name)
 		}
 	})
 }

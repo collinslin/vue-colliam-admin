@@ -102,6 +102,7 @@
 		align-items: center;
 		padding: 0 20px;
 		background-color: #fff;
+		box-shadow: 0px -3px 20px 0px rgb(0 0 0 / 50%);
 		transition: all 0.28s;
 	}
 

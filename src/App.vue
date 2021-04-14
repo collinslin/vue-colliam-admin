@@ -7,6 +7,9 @@
 
 	export default defineComponent({
 		name: 'App',
+		setup() {
+			return {}
+		},
 	})
 </script>
 
@@ -21,5 +24,12 @@
 		background-color: #f2f6fc;
 		color: #2c3e50;
 		overflow: hidden;
+	}
+	ul {
+		padding: 0;
+		margin: 0;
+	}
+	li {
+		list-style: none;
 	}
 </style>

@@ -20,7 +20,7 @@
 		<TabbarMenu
 			:left="left"
 			v-show="isShow"
-			@choose-tabbar-menu="chooseTabbarMenu"
+			@click-tabbar-menu="chooseTabbarMenu"
 		></TabbarMenu>
 	</transition>
 </template>
@@ -35,18 +35,12 @@
 		onUnmounted,
 		ref,
 	} from '@vue/runtime-core'
-	import {
-		RouteRecordName,
-		RouteRecordRaw,
-		useRoute,
-		useRouter,
-	} from 'vue-router'
+	import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 	import { useStore } from 'vuex'
 	import { Index } from '/@/type/store'
-	import TabbarMenu from './tabbarMenu.vue'
+	import TabbarMenu from '/@/components/dropdown/dropdownNav.vue'
 	import { ElMessage } from 'element-plus'
 	import { tabbarData } from '/@/type/store/setting'
-	import arrRemove from 'lodash/remove'
 
 	export default defineComponent({
 		name: 'Tabbar',
@@ -94,7 +88,7 @@
 			}
 
 			/**tabbar菜单栏的删除左侧和右侧事件 */
-			const deleteLR = (targetPath: string, type: number) => {
+			const closeLR = (targetPath: string, type: number) => {
 				const index = findTargetIndex(targetPath)
 				const spliceList = type
 					? tabbarData.value.splice(index + 1, tabbarData.value.length)
@@ -142,6 +136,7 @@
 					isShow.value = true
 				}
 			}
+
 			/**tabbar菜单栏的Item点击事件 */
 			const typeList: { [key: string]: (targetPath: string) => void } = {
 				refresh: (targetPath) => {
@@ -155,10 +150,10 @@
 					}
 					router.replace({ path: `/redirect${targetPath}`, query: route.query })
 				},
-				myDelete: (targetPath) => removeTabbar(targetPath),
-				deleteLeft: (targetPath) => deleteLR(targetPath, 0),
-				deleteRight: (targetPath) => deleteLR(targetPath, 1),
-				deleteAll: (targetPath) => {
+				close: (targetPath) => removeTabbar(targetPath),
+				closeLeft: (targetPath) => closeLR(targetPath, 0),
+				closeRight: (targetPath) => closeLR(targetPath, 1),
+				closeAll: (targetPath) => {
 					const targetIndex = findTargetIndex(targetPath)
 					const target = tabbarData.value.find(
 						(item, index) => targetIndex == index
@@ -241,5 +236,18 @@
 			opacity: 1;
 			transform: translateX(-7px);
 		}
+	}
+	:deep(.el-tabs__nav-prev),
+	:deep(.el-tabs__nav-next) {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 30px;
+		height: 100%;
+		font-size: 20px;
+		font-weight: bold;
+		color: #000;
+		background-color: #ffffff;
+		z-index: 3;
 	}
 </style>

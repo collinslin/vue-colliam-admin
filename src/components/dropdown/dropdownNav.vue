@@ -3,31 +3,29 @@
 		class="dropdown-menu"
 		:style="{ transform: `translateX(${left}px) translateY(70px)` }"
 	>
-		<div
-			class="dropdown-item"
-			v-for="item in dropdownMenu"
-			:key="item.name"
-			@click="chooseTabbarMenu(item.type)"
-		>
-			<el-icon :class="item.icon"></el-icon>
-			{{ item.name }}
-		</div>
+		<Dropdown
+			:dropdownMenu="dropdownMenu"
+			@click-dropdown-menu="clickDropdownItem"
+		></Dropdown>
 	</div>
 </template>
 
 <script lang="ts">
 	import { defineComponent, reactive } from '@vue/runtime-core'
+	import Dropdown, { DropdownMenu } from './dropdown.vue'
 
 	export default defineComponent({
-		name: 'TabbarMenu',
+		name: 'DropdownNav',
+		components: { Dropdown },
 		props: {
 			left: {
 				type: Number,
 				required: true,
 			},
 		},
+		emits: ['click-tabbar-menu'],
 		setup(props, { emit }) {
-			const dropdownMenu = reactive([
+			const dropdownMenu: DropdownMenu[] = reactive([
 				{
 					icon: 'el-icon-refresh',
 					name: '刷新本页',
@@ -36,45 +34,38 @@
 				{
 					icon: 'el-icon-delete',
 					name: '关闭本页',
-					type: 'myDelete',
+					type: 'close',
 				},
 				{
 					icon: 'el-icon-upload2 rotate-left',
 					name: '关闭左侧',
-					type: 'deleteLeft',
+					type: 'closeLeft',
 				},
 				{
 					icon: 'el-icon-upload2 rotate-right',
 					name: '关闭右侧',
-					type: 'deleteRight',
+					type: 'closeRigth',
 				},
 				{
 					icon: 'el-icon-close',
 					name: '关闭其他',
-					type: 'deleteAll',
+					type: 'closeAll',
 				},
 			])
 
-			const chooseTabbarMenu = (type: string) => {
-				emit('choose-tabbar-menu', type)
-				// typeList[type] && typeList[type]()
+			const clickDropdownItem = (type: string) => {
+				emit('click-tabbar-menu', type)
 			}
 
 			return {
 				dropdownMenu,
-				chooseTabbarMenu,
+				clickDropdownItem,
 			}
 		},
 	})
 </script>
 
 <style lang="scss" scoped>
-	.rotate-left {
-		transform: rotate(-90deg);
-	}
-	.rotate-right {
-		transform: rotate(90deg);
-	}
 	.dropdown-menu {
 		position: absolute;
 		width: 120px;
@@ -98,20 +89,6 @@
 			border-color: transparent transparent #fff transparent;
 			transform: translateY(-100%);
 			z-index: 3;
-		}
-		.dropdown-item {
-			padding: 10px 0;
-			margin: 5px 0;
-			font-size: 14px;
-			background-color: #fff;
-			transition: all 0.3s;
-			cursor: pointer;
-			&:hover {
-				background-color: rgba(217, 236, 255, 0.8);
-				color: #409eff;
-				border-radius: 10px;
-				transform: scale(1.1);
-			}
 		}
 	}
 </style>

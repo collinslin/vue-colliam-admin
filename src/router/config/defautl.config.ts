@@ -21,7 +21,9 @@ const root: RouteRecordRaw = {
 				icon: 'el-icon-s-home',
 				keepAlive: true,
 				isCloseTabbar: false,
-				role: ['click'],
+				authority: {
+					role: ['click'],
+				}
 			},
 		},
 		{
@@ -31,7 +33,9 @@ const root: RouteRecordRaw = {
 			meta: {
 				title: '表单',
 				icon: 'el-icon-edit-outline',
-				role: ['admin'],
+				authority: {
+					role: ['admin'],
+				}
 			},
 			children: formRouterChildren,
 		},

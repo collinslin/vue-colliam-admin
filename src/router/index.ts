@@ -1,8 +1,9 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import root from './config/defautl.config'
 import RootView from '/@/layout/rootView'
-
-/**index文件用来配置不需要layout布局的页面 */
+import { formatAuthority } from '/@/utils/routerUtils';
+formatAuthority([root])
+/**index文件用来配置不需要使用菜单栏的页面 */
 const routes: Array<RouteRecordRaw> = [
 	root,
 	{

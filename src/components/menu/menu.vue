@@ -43,7 +43,6 @@
 			const store = useStore()
 			const route = useRoute()
 			const menuData = inject('menuData') as ComputedRef<RouteRecordRaw[]>
-			// const defaultActive = ref(route.path)
 			const defaultActive = computed(() => route.path)
 			const openMenu = (menuRoute: string) => {
 				menuData.value.forEach((route: RouteRecordRaw | any) => {

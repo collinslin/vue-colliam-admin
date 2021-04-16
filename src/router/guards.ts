@@ -6,6 +6,7 @@ import {
 } from '../type/router/guards'
 import NProgress from 'nprogress'
 import store from '../store'
+import { hasAuthority } from '/@/utils/authority-utils'
 
 NProgress.configure({ showSpinner: false })
 
@@ -44,6 +45,29 @@ const addTabbar: AppBeforeEach = (to, form, next) => {
 	next()
 }
 
+/**权限验证 */
+const authorityVerification: AppBeforeEach = (to, from, next, options) => {
+	if (to.path.includes('login') || to.path.includes('redirect')) {
+		next()
+		return
+	}
+	const { store, message } = options
+	const flag = hasAuthority(
+		to,
+		store?.getters['account/userPermissions'],
+		store?.getters['account/userRoles']
+	)
+	if (flag) {
+		next()
+	} else {
+		message &&
+			message({
+				message: '您暂时没有权限访问，可以联系管理员开通访问权限',
+				type: 'error',
+			})
+	}
+}
+
 /**
  * 进度条结束
  * @param to
@@ -56,7 +80,7 @@ const progressDone: AppAfterEach = () => {
 }
 
 const guards: RouterGuards = {
-	beforeEach: [progressStart, addTabbar],
+	beforeEach: [progressStart, addTabbar, authorityVerification],
 	afterEach: [progressDone],
 }
 

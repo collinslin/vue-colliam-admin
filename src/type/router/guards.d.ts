@@ -14,7 +14,7 @@ declare type NavigationGuardReturn =
 	| RouteLocationRaw
 	| boolean
 	| NavigationGuardNextCallback
-interface AppBeforeEachRoute extends RouteLocationNormalized {
+export interface AppBeforeEachRoute extends RouteLocationNormalized {
 	active?: boolean
 }
 interface AppBeforeEach {
@@ -32,7 +32,6 @@ interface AppAfterEach {
 		options?: RunTimeOptions
 	): any
 }
-
 export interface RouterGuards {
 	beforeEach: AppBeforeEach[]
 	afterEach: AppAfterEach[]

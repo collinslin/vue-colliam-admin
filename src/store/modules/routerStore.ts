@@ -1,8 +1,9 @@
 import { Module } from 'vuex'
 import { RouteRecordRaw } from 'vue-router'
 import { StoreRouter } from '/@/type/store/router'
+import { Index } from '/@/type/store'
 
-const routerStore: Module<StoreRouter, any> = {
+const routerStore: Module<StoreRouter, Index> = {
 	namespaced: true,
 	state() {
 		return {

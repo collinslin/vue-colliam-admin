@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
+import { AppBeforeEachRoute } from '../type/router/guards'
 import { Authority, Permissions, Roles } from '/@/type/store/account'
 
 /**判断是否拥有操作权限
@@ -66,16 +67,21 @@ function hasAnyRole(required: string | string[], roles: Roles[] | string[]) {
 }
 
 /**判断目前用户是否有该菜单访问的权限 */
-function hasAuthority(
-	route: RouteRecordRaw,
+export function hasAuthority(
+	route: RouteRecordRaw | AppBeforeEachRoute,
 	permissions: Permissions[] | string[],
 	roles: Roles[] | string[]
 ) {
-	if (route.meta) {
+	console.log(route.meta)
+
+	if (route.meta && Object.keys(route.meta).length > 0) {
 		const authorities: Array<Authority | string> = [
 			...(route.meta.pAuthorities as Array<Authority | string>),
 			route.meta.authority as Authority | string,
 		]
+
+		console.log(authorities)
+
 		for (let authority of authorities) {
 			if (
 				!hasPermission(authority, permissions) &&
@@ -109,6 +115,7 @@ export function filterMenu(
 
 export default {
 	filterMenu,
+	hasAuthority,
 	hasPermission,
 	hasRole,
 }

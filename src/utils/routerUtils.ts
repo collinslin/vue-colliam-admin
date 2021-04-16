@@ -38,6 +38,9 @@ function parseRoutes(
 			)
 			routeCfg = item
 		}
+
+		console.log(vueRouter)
+
 		const asyncRouter: RouteRecordRaw = {
 			path:
 				(routeCfg.isAppView ? routeCfg.path : routeCfg.link) ||
@@ -100,6 +103,8 @@ function parseRoutes(
 export function loadRoutes(routesConfig?: RoutesConfig[]) {
 	const { router, store } = appOptions
 	const vueRoutes = router?.getRoutes() as RouteRecordNormalized[]
+	console.log(vueRoutes)
+
 	if (routesConfig) {
 		store?.commit('routerStore/setRoutesConfig', routesConfig)
 	} else {
@@ -107,7 +112,10 @@ export function loadRoutes(routesConfig?: RoutesConfig[]) {
 	}
 	if (routesConfig && routesConfig.length > 0) {
 		const asyncRouters = parseRoutes(vueRoutes, routesConfig)
+		console.log(asyncRouters)
+
 		const finalRoutes = deepMergeRoutes(vueRoutes, asyncRouters)
+		console.log(finalRoutes)
 		formatAuthority(finalRoutes)
 		finalRoutes?.forEach((item) => {
 			router?.addRoute(item)
@@ -130,7 +138,9 @@ function initKeepAliveComponents(
 ) {
 	menuRoutes?.forEach((item) => {
 		if (item.meta?.keepAlive && item.name) {
-			store?.state.routerStore?.keepAliveInclude.push(item.name)
+			if (!store?.state.routerStore?.keepAliveInclude.includes(item.name)) {
+				store?.state.routerStore?.keepAliveInclude.push(item.name)
+			}
 		}
 	})
 }

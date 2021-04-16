@@ -146,6 +146,8 @@
 						(item) => item == target?.name
 					) as number
 					if (flag > -1) {
+            console.log(1);
+            
 						store.state.routerStore?.keepAliveInclude.splice(flag, 1)
 					}
 					router.replace({ path: `/redirect${targetPath}`, query: route.query })

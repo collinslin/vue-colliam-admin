@@ -7,6 +7,7 @@ const routes: Array<RouteRecordRaw> = [
 	root,
 	{
 		path: '/redirect',
+		name: 'redirect',
 		component: RootView,
 		meta: {
 			hidden: true,
@@ -14,6 +15,7 @@ const routes: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: '/redirect/:path(.*)',
+				name: 'redirectPage',
 				component: () => import('/@/pages/redirect/index.vue'),
 			},
 		],

@@ -72,16 +72,11 @@ export function hasAuthority(
 	permissions: Permissions[] | string[],
 	roles: Roles[] | string[]
 ) {
-	console.log(route.meta)
-
 	if (route.meta && Object.keys(route.meta).length > 0) {
 		const authorities: Array<Authority | string> = [
 			...(route.meta.pAuthorities as Array<Authority | string>),
 			route.meta.authority as Authority | string,
 		]
-
-		console.log(authorities)
-
 		for (let authority of authorities) {
 			if (
 				!hasPermission(authority, permissions) &&

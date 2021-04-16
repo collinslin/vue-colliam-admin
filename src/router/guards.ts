@@ -5,8 +5,8 @@ import {
 	RouterGuards,
 } from '../type/router/guards'
 import NProgress from 'nprogress'
-import store from '../store'
 import { hasAuthority } from '/@/utils/authority-utils'
+import { isException } from '../utils/utils'
 
 NProgress.configure({ showSpinner: false })
 
@@ -22,25 +22,8 @@ const progressStart: AppBeforeEach = (to, from, next) => {
 	next()
 }
 
-/**添加Tabbar */
 const addTabbar: AppBeforeEach = (to, form, next) => {
 	if (!to.path.includes('login') && !to.path.includes('redirect')) {
-		const tabbarData = store.state.setting?.tabbarData
-		const inTabbar = tabbarData?.find((tabbar) => tabbar.path == to.path)
-		if (!inTabbar) {
-			if (to.path.includes('home')) {
-				store.state.setting?.tabbarData.unshift(to)
-			} else {
-				store.state.setting?.tabbarData.push(to)
-			}
-		}
-		tabbarData?.forEach((tabbar) => {
-			if (tabbar.path == to.path) {
-				tabbar.active = true
-			} else {
-				tabbar.active = false
-			}
-		})
 	}
 	next()
 }
@@ -58,6 +41,24 @@ const authorityVerification: AppBeforeEach = (to, from, next, options) => {
 		store?.getters['account/userRoles']
 	)
 	if (flag) {
+		/**添加Tabbar */
+		const tabbarData = store?.state.setting?.tabbarData
+		const tabbarFlag = isException(to.path)
+		const inTabbar = tabbarData?.find((tabbar) => tabbar.path == to.path)
+		if (!inTabbar) {
+			if (to.path.includes('home')) {
+				store?.state.setting?.tabbarData.unshift(to)
+			} else if (!tabbarFlag) {
+				store?.state.setting?.tabbarData.push(to)
+			}
+		}
+		tabbarData?.forEach((tabbar) => {
+			if (tabbar.path == to.path) {
+				tabbar.active = true
+			} else {
+				tabbar.active = false
+			}
+		})
 		next()
 	} else {
 		message &&
@@ -65,6 +66,7 @@ const authorityVerification: AppBeforeEach = (to, from, next, options) => {
 				message: '您暂时没有权限访问，可以联系管理员开通访问权限',
 				type: 'error',
 			})
+		next({ path: '/401' })
 	}
 }
 

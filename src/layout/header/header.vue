@@ -46,6 +46,7 @@
 	import { UserDropdownMethods } from '.'
 	import HeaderUser from './headerUser.vue'
 	import Dropdown, { DropdownMenu } from '/@/components/dropdown/dropdown.vue'
+	import { isException } from '/@/utils/utils'
 
 	export default defineComponent({
 		name: 'Header',
@@ -77,7 +78,9 @@
 							const target = routerList.find(
 								(router) => router.name == item.name
 							)
-							searchData.value.push(target)
+							if (!isException(item.path)) {
+								searchData.value.push(target)
+							}
 						}
 					} else {
 						initSearchData(item.children)

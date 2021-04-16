@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
 import RootView from '/@/layout/rootView'
+import exception from './exception.config'
 import formRouterChildren from './form.config'
 
 /**该文件用于配置需要layout布局的路由
@@ -21,9 +22,6 @@ const root: RouteRecordRaw = {
 				icon: 'el-icon-s-home',
 				keepAlive: true,
 				isCloseTabbar: false,
-				authority: {
-					role: ['click'],
-				},
 			},
 		},
 		{
@@ -39,6 +37,8 @@ const root: RouteRecordRaw = {
 			},
 			children: formRouterChildren,
 		},
+		//错误页面
+		...exception,
 	],
 }
 

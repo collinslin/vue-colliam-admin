@@ -17,11 +17,11 @@
 		</el-tab-pane>
 	</el-tabs>
 	<transition name="el-zoom-in-top">
-		<TabbarMenu
+		<DropdownNav
 			:left="left"
 			v-show="isShow"
 			@click-tabbar-menu="chooseTabbarMenu"
-		></TabbarMenu>
+		></DropdownNav>
 	</transition>
 </template>
 
@@ -30,27 +30,25 @@
 		computed,
 		ComputedRef,
 		defineComponent,
-		inject,
 		onMounted,
 		onUnmounted,
 		ref,
 	} from '@vue/runtime-core'
-	import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
+	import { useRoute, useRouter } from 'vue-router'
 	import { useStore } from 'vuex'
 	import { Index } from '/@/type/store'
-	import TabbarMenu from '/@/components/dropdown/dropdownNav.vue'
+	import DropdownNav from '/@/components/dropdown/dropdownNav.vue'
 	import { ElMessage } from 'element-plus'
 	import { tabbarData } from '/@/type/store/setting'
+	import { changeMenuStyle } from '/@/utils/utils'
 
 	export default defineComponent({
 		name: 'Tabbar',
-		components: { TabbarMenu },
+		components: { DropdownNav },
 		setup() {
 			const store = useStore<Index>()
 			const route = useRoute()
 			const router = useRouter()
-
-			const menuData = inject('menuData') as ComputedRef<RouteRecordRaw[]>
 
 			/**当前激活的tabbarItem */
 			const tabbarDataValue = computed({
@@ -109,17 +107,6 @@
 				return index
 			}
 
-			/**用于更改菜单栏的样式 */
-			const changeMenuStyle = (path: string) => {
-				menuData.value.forEach((menu: RouteRecordRaw | any) => {
-					if (path.includes(menu.path)) {
-						menu.active = true
-					} else {
-						menu.active = false
-					}
-				})
-			}
-
 			/**tabbar右击事件 */
 			const isShow = ref(false)
 			const left = ref(0)
@@ -146,8 +133,6 @@
 						(item) => item == target?.name
 					) as number
 					if (flag > -1) {
-            console.log(1);
-            
 						store.state.routerStore?.keepAliveInclude.splice(flag, 1)
 					}
 					router.replace({ path: `/redirect${targetPath}`, query: route.query })

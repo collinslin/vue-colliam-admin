@@ -18,7 +18,6 @@
 					:key="item.path"
 					:item="item"
 					:basePath="item.path"
-					:class="{ 'item-active': item.active }"
 				></sidebar-item>
 			</el-menu>
 		</el-scrollbar>
@@ -88,11 +87,5 @@
 
 	.el-menu {
 		border: none;
-	}
-
-	.item-active {
-		:deep(.el-submenu__title) {
-			color: #40a0ff;
-		}
 	}
 </style>

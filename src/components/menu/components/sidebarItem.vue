@@ -1,5 +1,5 @@
 <template>
-	<template v-if="!item.children">
+	<template v-if="!item.children && !item.meta.hidden">
 		<colliam-link
 			:to="resolvePath(item.path)"
 			:item="item"
@@ -12,7 +12,11 @@
 		</colliam-link>
 	</template>
 
-	<el-submenu v-else :index="resolvePath(item.path)">
+	<el-submenu
+		v-if="item.children && !item.meta.hidden"
+		:index="resolvePath(item.path)"
+		:class="{ 'item-active': item.active }"
+	>
 		<template #title>
 			<i :class="item.meta.icon"></i>
 			<span>{{ item.name }}</span>
@@ -77,4 +81,10 @@
 	})
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+	.item-active {
+		:deep(.el-submenu__title) {
+			color: #40a0ff;
+		}
+	}
+</style>

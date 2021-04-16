@@ -6,8 +6,8 @@ const account: Module<Account, Index> = {
 	namespaced: true,
 	state() {
 		return {
-			roles: null,
-			permissions: null,
+			roles: [],
+			permissions: [],
 		}
 	},
 

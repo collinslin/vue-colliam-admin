@@ -22,7 +22,7 @@ const root: RouteRecordRaw = {
 				keepAlive: true,
 				isCloseTabbar: false,
 				authority: {
-					role: ['admin'],
+					role: ['click'],
 				},
 			},
 		},

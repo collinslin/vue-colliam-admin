@@ -40,7 +40,7 @@
 	import DropdownNav from '/@/components/dropdown/dropdownNav.vue'
 	import { ElMessage } from 'element-plus'
 	import { tabbarData } from '/@/type/store/setting'
-	import { changeMenuStyle } from '/@/utils/utils'
+	import { changeMenuStyle } from '/@/utils/menu-utils'
 
 	export default defineComponent({
 		name: 'Tabbar',

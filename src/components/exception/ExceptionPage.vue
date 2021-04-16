@@ -18,7 +18,7 @@
 	import { defineComponent, reactive } from '@vue/runtime-core'
 	import { useRoute, useRouter } from 'vue-router'
 	import Config from './typeConfig'
-	import { changeMenuStyle } from '/@/utils/utils'
+	import { changeMenuStyle } from '/@/utils/menu-utils'
 
 	export default defineComponent({
 		name: 'ExceptionPage',

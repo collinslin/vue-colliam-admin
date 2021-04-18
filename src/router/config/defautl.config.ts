@@ -31,9 +31,6 @@ const root: RouteRecordRaw = {
 			meta: {
 				title: '表单',
 				icon: 'el-icon-edit-outline',
-				authority: {
-					role: ['admin'],
-				},
 			},
 			children: formRouterChildren,
 		},

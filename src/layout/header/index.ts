@@ -1,4 +1,5 @@
 import Header from './header.vue'
+import { RouteRecordNormalized } from 'vue-router';
 export default Header
 
 export type UserDropdownMethods = {
@@ -7,3 +8,5 @@ export type UserDropdownMethods = {
   logout: () => any
   [key: string]: () => any
 }
+
+export interface AppRouteRecordNormalized extends RouteRecordNormalized { title?: string }

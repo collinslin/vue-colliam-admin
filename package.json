@@ -2,7 +2,7 @@
   "name": "vue-colliam-admin",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "d": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },

@@ -4,7 +4,7 @@ const userData = {
 	roles: ['visitor'],
 	// role: ['test'],
 	// permissions: ['edit'],
-	permission: ['delete'],
+	permissions: ['delete'],
 }
 
 export default userData

@@ -16,13 +16,17 @@ export function hasPermission(
 	} else if (typeof authority === 'object') {
 		required = authority.permission as string
 	}
-	return (
-		required === '*' ||
-		(permissions &&
-			permissions.findIndex(
-				(item: any) => item === required || item.id === required
-			) !== -1)
-	)
+	console.log(typeof authority === 'object' && authority.permission);
+	console.log(permissions);
+	const flag = permissions && permissions.findIndex((item: Permissions | string) => {
+		if (typeof item === 'string') {
+			return item == required
+		} else {
+			return item.id == required
+		}
+	})
+
+	return (required === '*' || flag !== -1)
 }
 
 /**判断是否拥有角色访问权限
@@ -72,6 +76,8 @@ export function hasAuthority(
 	permissions: Permissions[] | string[],
 	roles: Roles[] | string[]
 ) {
+	console.log(route);
+	
 	if (route.meta && Object.keys(route.meta).length > 0) {
 		const authorities: Array<Authority | string> = [
 			...(route.meta.pAuthorities as Array<Authority | string>),

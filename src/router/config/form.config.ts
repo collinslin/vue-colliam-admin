@@ -5,8 +5,9 @@ const formRouterChildren: RouteRecordRaw[] = [
 		name: 'advanceForm',
 		component: () => import('/@/pages/form/advanceForm'),
 		meta: {
+			title: '普通表单',
 			authority: {
-				role: ['admin'],
+				role: ['visitor'],
 			},
 		},
 	},
@@ -15,6 +16,7 @@ const formRouterChildren: RouteRecordRaw[] = [
 		name: 'basicForm',
 		component: () => import('/@/pages/form/basicForm'),
 		meta: {
+			title: '验权表单',
 			authority: {
 				role: ['admin'],
 			},
@@ -25,8 +27,9 @@ const formRouterChildren: RouteRecordRaw[] = [
 		name: 'stepForm',
 		component: () => import('/@/pages/form/stepForm'),
 		meta: {
+			title: '步骤表单',
 			authority: {
-				role: ['admin'],
+				role: ['visitor'],
 			},
 		},
 	},

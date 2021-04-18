@@ -7,6 +7,8 @@ import {
 import NProgress from 'nprogress'
 import { hasAuthority } from '/@/utils/authority-utils'
 import { isException } from '../utils/utils'
+import { RunTimeOptions } from '../runTime';
+import { AppBeforeEachRoute } from '../type/router/guards';
 
 NProgress.configure({ showSpinner: false })
 
@@ -22,18 +24,34 @@ const progressStart: AppBeforeEach = (to, from, next) => {
 	next()
 }
 
-const addTabbar: AppBeforeEach = (to, form, next) => {
-	if (!to.path.includes('login') && !to.path.includes('redirect')) {
+/**添加Tabbar */
+const addTabbar = (to: AppBeforeEachRoute, options: RunTimeOptions) => {
+	if (!to.meta.useTab) {
+		return
 	}
-	next()
+	const { store } = options
+	const tabbarData = store?.state.setting?.tabbarData
+	const tabbarFlag = isException(to.path)
+	const inTabbar = tabbarData?.find((tabbar) => tabbar.path == to.path)
+	if (!inTabbar) {
+		if (to.path.includes('home')) {
+			store?.state.setting?.tabbarData.unshift(to)
+		} else if (!tabbarFlag) {
+			store?.state.setting?.tabbarData.push(to)
+		}
+	}
+	tabbarData?.forEach((tabbar) => {
+		if (tabbar.path == to.path) {
+			tabbar.active = true
+		} else {
+			tabbar.active = false
+		}
+	})
 }
+
 
 /**权限验证 */
 const authorityVerification: AppBeforeEach = (to, from, next, options) => {
-	if (to.path.includes('login') || to.path.includes('redirect')) {
-		next()
-		return
-	}
 	const { store, message } = options
 	const flag = hasAuthority(
 		to,
@@ -41,24 +59,7 @@ const authorityVerification: AppBeforeEach = (to, from, next, options) => {
 		store?.getters['account/userRoles']
 	)
 	if (flag) {
-		/**添加Tabbar */
-		const tabbarData = store?.state.setting?.tabbarData
-		const tabbarFlag = isException(to.path)
-		const inTabbar = tabbarData?.find((tabbar) => tabbar.path == to.path)
-		if (!inTabbar) {
-			if (to.path.includes('home')) {
-				store?.state.setting?.tabbarData.unshift(to)
-			} else if (!tabbarFlag) {
-				store?.state.setting?.tabbarData.push(to)
-			}
-		}
-		tabbarData?.forEach((tabbar) => {
-			if (tabbar.path == to.path) {
-				tabbar.active = true
-			} else {
-				tabbar.active = false
-			}
-		})
+		addTabbar(to, options)
 		next()
 	} else {
 		message &&
@@ -82,7 +83,7 @@ const progressDone: AppAfterEach = () => {
 }
 
 const guards: RouterGuards = {
-	beforeEach: [progressStart, addTabbar, authorityVerification],
+	beforeEach: [progressStart, authorityVerification],
 	afterEach: [progressDone],
 }
 

@@ -61,6 +61,19 @@
 				() => store.state.setting?.tabbarData
 			) as ComputedRef<tabbarData[]>
 
+			const cachedTabsStr = sessionStorage.getItem(
+				import.meta.env.VITE_APP_TABBAR as string
+			)
+			if (cachedTabsStr && store.state.setting) {
+				try {
+					store.state.setting.tabbarData = JSON.parse(cachedTabsStr)
+				} catch (error) {
+					console.warn('failed to load cached tabs, got exception:', error)
+				} finally {
+					sessionStorage.removeItem(import.meta.env.VITE_APP_TABBAR as string)
+				}
+			}
+
 			/**tabbarItem的点击事件 */
 			const chooseTabbar = (tabbar: any) => {
 				changeMenuStyle(tabbar.props.name)
@@ -163,6 +176,12 @@
 			onMounted(() => {
 				window.addEventListener('click', () => {
 					isShow.value = false
+				})
+				window.addEventListener('unload', () => {
+					sessionStorage.setItem(
+						import.meta.env.VITE_APP_TABBAR as string,
+						JSON.stringify(tabbarData.value)
+					)
 				})
 			})
 

@@ -13,9 +13,25 @@ const account: Module<Account, Index> = {
 
 	getters: {
 		userRoles(state) {
+			try {
+				const roles = localStorage.getItem(
+					import.meta.env.VITE_APP_ROLES as string
+				)
+				state.roles = roles && JSON.parse(roles)
+			} catch (error) {
+				console.warn(error)
+			}
 			return state.roles
 		},
 		userPermissions(state) {
+			try {
+				const permissions = localStorage.getItem(
+					import.meta.env.VITE_APP_ROLES as string
+				)
+				state.roles = permissions && JSON.parse(permissions)
+			} catch (error) {
+				console.warn(error)
+			}
 			return state.permissions
 		},
 	},

@@ -25,7 +25,8 @@ import {
 	ElDropdownItem,
 	ElAvatar,
 	ElPopover,
-	ElAutocomplete
+	ElAutocomplete,
+	ElRadio,
 } from 'element-plus'
 export const elComponents = [
 	ElButton,
@@ -53,6 +54,7 @@ export const elComponents = [
 	ElDropdownItem,
 	ElAvatar,
 	ElPopover,
-	ElAutocomplete
+	ElAutocomplete,
+	ElRadio,
 ]
 export const elPlugins = [ElMessage]

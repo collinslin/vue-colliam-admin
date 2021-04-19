@@ -5,11 +5,13 @@ import store from './store'
 import { elComponents, elPlugins } from '/@/plugin/element-plus'
 import runTime from './runTime'
 import 'nprogress/nprogress.css' // 进度条样式文件
+import AuthorityPlugin from '/@/plugin/authority'
 
 const app = createApp(App)
 
 app.use(store)
 app.use(router)
+app.use(AuthorityPlugin)
 
 elPlugins.forEach((plugin) => {
 	app.use(plugin)
@@ -24,4 +26,4 @@ runTime({ router, store, message: app.config.globalProperties.$message }, app)
 
 app.mount('#app')
 
-console.log(import.meta.env)
+// console.log(import.meta.env)

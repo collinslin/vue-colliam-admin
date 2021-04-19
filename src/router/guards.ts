@@ -7,8 +7,8 @@ import {
 import NProgress from 'nprogress'
 import { hasAuthority } from '/@/utils/authority-utils'
 import { isException } from '../utils/utils'
-import { RunTimeOptions } from '../runTime';
-import { AppBeforeEachRoute } from '../type/router/guards';
+import { RunTimeOptions } from '../runTime'
+import { AppBeforeEachRoute } from '../type/router/guards'
 
 NProgress.configure({ showSpinner: false })
 
@@ -49,7 +49,6 @@ const addTabbar = (to: AppBeforeEachRoute, options: RunTimeOptions) => {
 	})
 }
 
-
 /**权限验证 */
 const authorityVerification: AppBeforeEach = (to, from, next, options) => {
 	const { store, message } = options
@@ -71,6 +70,21 @@ const authorityVerification: AppBeforeEach = (to, from, next, options) => {
 	}
 }
 
+/**解决动态路由刷新页面后跳转404页面的问题 */
+const addActiveRouter: AppBeforeEach = (to, from, next, options) => {
+	const { router } = options
+	const routerList = router?.getRoutes()
+	if (to.name === 'nofind') {
+		const realRouter = routerList?.find((route) => route.path === to.path)
+		if (realRouter) {
+			router?.replace(realRouter)
+		} else {
+			next({ path: '/404' })
+		}
+	}
+	next()
+}
+
 /**
  * 进度条结束
  * @param to
@@ -83,7 +97,7 @@ const progressDone: AppAfterEach = () => {
 }
 
 const guards: RouterGuards = {
-	beforeEach: [progressStart, authorityVerification],
+	beforeEach: [progressStart, addActiveRouter, authorityVerification],
 	afterEach: [progressDone],
 }
 

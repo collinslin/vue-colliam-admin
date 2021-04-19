@@ -10,7 +10,7 @@
 		<el-tab-pane
 			v-for="item in tabbarData"
 			:key="item.path"
-			:label="item.name"
+			:label="item.meta.title"
 			:name="item.path"
 			:closable="item.meta.isCloseTabbar == false ? false : true"
 		>

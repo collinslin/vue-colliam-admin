@@ -84,7 +84,7 @@ function parseRoutes(
 					vueRouter && vueRouter.meta.isCloseTabbar
 						? vueRouter.meta.isCloseTabbar
 						: true,
-				useTab: vueRouter && vueRouter.meta.useTab == false ? false : true
+				useTab: vueRouter && vueRouter.meta.useTab == false ? false : true,
 			},
 		}
 		if (routeCfg.children && routeCfg.children.length > 0) {

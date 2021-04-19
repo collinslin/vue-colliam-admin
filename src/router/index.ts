@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import root from './config/defautl.config'
 import RootView from '/@/layout/rootView'
-import { formatAuthority } from '/@/utils/routerUtils';
+import { formatAuthority } from '/@/utils/routerUtils'
 /**index文件用来配置不需要使用菜单栏的页面 */
 const routes: Array<RouteRecordRaw> = [
 	root,
@@ -26,17 +26,17 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'login',
 		component: () => import('/@/pages/login/login.vue'),
 		meta: {
-			useTab: false
-		}
+			useTab: false,
+		},
 	},
 	{
 		path: '/:pathMatch(.*)*',
 		name: 'nofind',
 		component: () => import('/@/pages/exception/404.vue'),
 		meta: {
-			useTab: false
-		}
-	}
+			useTab: false,
+		},
+	},
 ]
 
 formatAuthority(routes)

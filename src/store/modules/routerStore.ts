@@ -18,11 +18,12 @@ const routerStore: Module<StoreRouter, Index> = {
 				const routesConfig = localStorage.getItem(
 					import.meta.env.VITE_APP_ROUTER as string
 				)
-				state.routesConfig = JSON.parse(routesConfig as string)
+				state.routesConfig = routesConfig && JSON.parse(routesConfig)
 				state.routesConfig = state.routesConfig ? state.routesConfig : []
 			} catch (e) {
 				console.error(e.message)
 			}
+			return state.routesConfig
 		},
 	},
 

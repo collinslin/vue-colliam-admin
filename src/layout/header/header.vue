@@ -129,11 +129,9 @@
 				mine: () => {},
 				setting: () => {},
 				logout: () => {
-					localStorage.removeItem(import.meta.env.VITE_APP_ROUTER as string)
-					localStorage.removeItem(import.meta.env.VITE_APP_ROLES as string)
-					localStorage.removeItem(
-						import.meta.env.VITE_APP_PERMISSIONS as string
-					)
+					localStorage.removeItem(import.meta.env.VITE_APP_ROUTER)
+					localStorage.removeItem(import.meta.env.VITE_APP_ROLES)
+					localStorage.removeItem(import.meta.env.VITE_APP_PERMISSIONS)
 					router.push({ path: '/login' })
 				},
 			}

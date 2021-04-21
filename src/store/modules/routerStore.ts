@@ -16,7 +16,7 @@ const routerStore: Module<StoreRouter, Index> = {
 		routesConfig(state) {
 			try {
 				const routesConfig = localStorage.getItem(
-					import.meta.env.VITE_APP_ROUTER as string
+					import.meta.env.VITE_APP_ROUTER
 				)
 				state.routesConfig = routesConfig && JSON.parse(routesConfig)
 				state.routesConfig = state.routesConfig ? state.routesConfig : []
@@ -31,7 +31,7 @@ const routerStore: Module<StoreRouter, Index> = {
 		setRoutesConfig(state, routesConfig: RouteRecordRaw[]) {
 			state.routesConfig = routesConfig
 			localStorage.setItem(
-				import.meta.env.VITE_APP_ROUTER as string,
+				import.meta.env.VITE_APP_ROUTER,
 				JSON.stringify(routesConfig)
 			)
 		},

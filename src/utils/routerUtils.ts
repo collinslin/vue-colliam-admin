@@ -1,6 +1,6 @@
-import deepMerge from 'deepmerge'
 import { RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 import { Store } from 'vuex'
+import deepMerge from 'lodash/merge'
 import { RunTimeOptions } from '../runTime'
 import { RouterGuards } from '../type/router/guards'
 import { Index } from '../type/store'
@@ -114,7 +114,6 @@ export function loadRoutes(routesConfig?: RoutesConfig[]) {
 			router?.addRoute(item)
 		})
 	}
-
 	const routesList = router?.getRoutes()
 	const rootRoute = routesList?.find((item) => item.path === '/')
 	const menuRoutes = rootRoute && rootRoute.children

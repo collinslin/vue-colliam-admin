@@ -7,6 +7,7 @@ import formRouterChildren from './form.config'
  * 为了防止项目后期庞大
  * 视情况彩粉路由配置
  */
+
 const root: RouteRecordRaw = {
 	path: '/',
 	name: 'root',
@@ -20,8 +21,8 @@ const root: RouteRecordRaw = {
 			meta: {
 				title: '首页',
 				icon: 'el-icon-s-home',
-				keepAlive: true,
 				isCloseTabbar: false,
+				keepAlive: true,
 			},
 		},
 		{

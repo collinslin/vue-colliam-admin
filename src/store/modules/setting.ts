@@ -13,8 +13,7 @@ const account: Module<Setting, Index> = {
 		}
 	},
 
-	getters: {
-	},
+	getters: {},
 
 	mutations: {
 		setMenuData(state, menuData) {

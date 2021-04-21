@@ -28,7 +28,6 @@
 <script lang="ts">
 	import {
 		computed,
-		ComputedRef,
 		defineComponent,
 		onMounted,
 		onUnmounted,
@@ -39,7 +38,6 @@
 	import { Index } from '/@/type/store'
 	import DropdownNav from '/@/components/dropdown/dropdownNav.vue'
 	import { ElMessage } from 'element-plus'
-	import { tabbarData } from '/@/type/store/setting'
 	import { changeMenuStyle } from '/@/utils/menu-utils'
 
 	export default defineComponent({
@@ -57,12 +55,10 @@
 			})
 
 			/**tabbar列表 */
-			const tabbarData = computed(
-				() => store.state.setting?.tabbarData
-			) as ComputedRef<tabbarData[]>
+			const tabbarData = computed(() => store.state.setting?.tabbarData)
 
 			const cachedTabsStr = sessionStorage.getItem(
-				import.meta.env.VITE_APP_TABBAR as string
+				import.meta.env.VITE_APP_TABBAR
 			)
 			if (cachedTabsStr && store.state.setting) {
 				try {
@@ -70,7 +66,7 @@
 				} catch (error) {
 					console.warn('failed to load cached tabs, got exception:', error)
 				} finally {
-					sessionStorage.removeItem(import.meta.env.VITE_APP_TABBAR as string)
+					sessionStorage.removeItem(import.meta.env.VITE_APP_TABBAR)
 				}
 			}
 
@@ -90,9 +86,9 @@
 					return
 				}
 				const index = findTargetIndex(path) as number
-				index && index != -1 && tabbarData.value.splice(index, 1)
+				index && index != -1 && tabbarData.value!.splice(index, 1)
 				if (tabbarDataValue.value === path) {
-					const pushPath = tabbarData.value[index - 1].path as string
+					const pushPath = tabbarData.value![index - 1].path as string
 					changeMenuStyle(pushPath)
 					router.push(pushPath)
 				}
@@ -102,8 +98,8 @@
 			const closeLR = (targetPath: string, type: number) => {
 				const index = findTargetIndex(targetPath)
 				const spliceList = type
-					? tabbarData.value.splice(index + 1, tabbarData.value.length)
-					: tabbarData.value.splice(1, index - 1)
+					? tabbarData.value!.splice(index + 1, tabbarData.value!.length)
+					: tabbarData.value!.splice(1, index - 1)
 				spliceList?.forEach((item) => {
 					if (item.active) {
 						changeMenuStyle(targetPath)
@@ -114,7 +110,7 @@
 
 			/**找到对应tabbarItem的index */
 			const findTargetIndex = (path: string): number => {
-				const index = tabbarData.value.findIndex(
+				const index = tabbarData.value!.findIndex(
 					(item) => item.path == path
 				) as number
 				return index
@@ -155,13 +151,13 @@
 				closeRight: (targetPath) => closeLR(targetPath, 1),
 				closeAll: (targetPath) => {
 					const targetIndex = findTargetIndex(targetPath)
-					const target = tabbarData.value.find(
+					const target = tabbarData.value!.find(
 						(item, index) => targetIndex == index
 					)
 					if (store.state.setting) {
 						store.state.setting.tabbarData = target
-							? [tabbarData.value[0], target]
-							: [tabbarData.value[0]]
+							? [tabbarData.value![0], target]
+							: [tabbarData.value![0]]
 						if (!target?.active) {
 							changeMenuStyle(targetPath)
 							router.push(targetPath)
@@ -177,16 +173,19 @@
 				window.addEventListener('click', () => {
 					isShow.value = false
 				})
-				window.addEventListener('unload', () => {
-					sessionStorage.setItem(
-						import.meta.env.VITE_APP_TABBAR as string,
-						JSON.stringify(tabbarData.value)
-					)
+				window.addEventListener('beforeunload', () => {
+					if (tabbarData.value?.length! > 0) {
+						sessionStorage.setItem(
+							import.meta.env.VITE_APP_TABBAR,
+							JSON.stringify(tabbarData.value)
+						)
+					}
 				})
 			})
 
 			onUnmounted(() => {
 				window.removeEventListener('click', () => {})
+				window.removeEventListener('beforeunload', () => {})
 			})
 
 			return {

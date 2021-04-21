@@ -1,7 +1,7 @@
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
 
 export interface Setting {
-	menuData: RouteRecordRaw[]
+	menuData: RouteRecordRaw[] & { active?: boolean }
 	tabbarData: tabbarData[]
 	[key: string]: any
 }

@@ -1,27 +1,25 @@
 <template>
-	<div>
-		<el-scrollbar
-			:noresize="true"
-			class="menu-nav"
-			wrap-class="scrollbar-wrapper"
-			:style="{ width: menuWidth }"
+	<el-scrollbar
+		id="menu-nav"
+		:noresize="true"
+		wrap-class="scrollbar-wrapper"
+		:style="{ width: menuWidth }"
+	>
+		<el-menu
+			:uniqueOpened="true"
+			:default-active="defaultActive"
+			:collapse="isCollapse"
+			:collapse-transition="false"
+			@open="openMenu"
 		>
-			<el-menu
-				:uniqueOpened="true"
-				:default-active="defaultActive"
-				:collapse="isCollapse"
-				:collapse-transition="false"
-				@open="openMenu"
-			>
-				<sidebar-item
-					v-for="item in menuData"
-					:key="item.path"
-					:item="item"
-					:basePath="item.path"
-				></sidebar-item>
-			</el-menu>
-		</el-scrollbar>
-	</div>
+			<sidebar-item
+				v-for="item in menuData"
+				:key="item.path"
+				:item="item"
+				:basePath="item.path"
+			></sidebar-item>
+		</el-menu>
+	</el-scrollbar>
 </template>
 
 <script lang="ts">
@@ -60,7 +58,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.menu-nav {
+	#menu-nav {
 		position: fixed;
 		width: 250px;
 		height: 100%;

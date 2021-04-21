@@ -1,7 +1,8 @@
 import { App, DirectiveBinding } from '@vue/runtime-core'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
 import { Permissions, Roles } from '/@/type/store/account'
-import { checkType } from '/@/utils/utils'
+import store from '/@/store'
+import router from '/@/router'
 //权限指令
 /** 获取路由需要的权限*/
 interface MetaAuthority {
@@ -85,8 +86,6 @@ const checkFromRoles = function (check: any, roles: Roles[]) {
 const checkInject = (el: any, binding: DirectiveBinding) => {
 	const type = binding.arg
 	const check = binding.value
-	const _this = binding.instance as any
-	const $auth = _this.$auth
 	if (!$auth || !$auth(check, type!)) {
 		addDisabled(el)
 	} else {
@@ -115,6 +114,25 @@ const removeDisabled = function (el: any) {
 	el.removeAttribute('title')
 }
 
+/**获取用户权限集合和路由权限集合并进行校验
+ * @param check 需要校验的权限
+ * @param type 校验类型（role、permissions）
+ */
+const $auth = (check: any, type: string) => {
+	const route = router.currentRoute.value
+	const permissions = store.getters['account/userPermissions'] //权限集合
+	const roles = store.getters['account/userRoles'] //角色集合
+	const permission = getRoutePermission(permissions, route) //当前页面需要权限
+	const role = getRouteRole(roles, route) //当前页面需要的角色
+	return auth.apply(this, [
+		{ check, type },
+		permission!,
+		role,
+		permissions,
+		roles,
+	])
+}
+
 const AuthorityPlugin = {
 	install(app: App<Element>) {
 		app.directive('auth', {
@@ -129,27 +147,7 @@ const AuthorityPlugin = {
 				removeDisabled(el)
 			},
 		})
-		app.mixin({
-			beforeCreate() {},
-			methods: {
-				$auth(check: any, type: string) {
-					const permissions = this.$store.getters['account/userPermissions'] //权限集合
-					const roles = this.$store.getters['account/userRoles'] //角色集合
-					const permission = getRoutePermission(permissions, this.$route) //当前页面需要权限
-					const role = getRouteRole(roles, this.$route) //当前页面需要的角色
-					return auth.apply(this, [
-						{ check, type },
-						permission!,
-						role,
-						permissions,
-						roles,
-					])
-				},
-			},
-		})
-
-		const $auth = app._context.mixins.find((item) => item.methods.$auth)
-			?.methods.$auth
+		/**全局注入权限验证方法 */
 		app.provide('$auth', $auth)
 	},
 }

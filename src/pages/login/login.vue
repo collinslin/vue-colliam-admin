@@ -99,13 +99,11 @@
 			const login = async () => {
 				const data = await import('./routerMock')
 				const userData = await import('./userMock')
-				console.log(userData.default)
 				loadRoutes(data.default)
 				store.commit('account/setUserData', userData.default)
 				router.push({
 					path: '/home',
 				})
-				console.log(router.getRoutes())
 			}
 
 			return {

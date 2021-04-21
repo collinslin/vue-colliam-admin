@@ -21,8 +21,6 @@
 			if (target.meta.keepAlive && target.name) {
 				store.state.routerStore?.keepAliveInclude.push(target.name)
 			}
-			console.log(store.state.routerStore?.keepAliveInclude)
-
 			router.replace({ path: '/' + path, query })
 		},
 	})

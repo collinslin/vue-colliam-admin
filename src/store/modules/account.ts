@@ -14,9 +14,7 @@ const account: Module<Account, Index> = {
 	getters: {
 		userRoles(state) {
 			try {
-				const roles = localStorage.getItem(
-					import.meta.env.VITE_APP_ROLES as string
-				)
+				const roles = localStorage.getItem(import.meta.env.VITE_APP_ROLES)
 				state.roles = roles && JSON.parse(roles)
 			} catch (error) {
 				console.warn(error)
@@ -25,9 +23,7 @@ const account: Module<Account, Index> = {
 		},
 		userPermissions(state) {
 			try {
-				const permissions = localStorage.getItem(
-					import.meta.env.VITE_APP_ROLES as string
-				)
+				const permissions = localStorage.getItem(import.meta.env.VITE_APP_ROLES)
 				state.roles = permissions && JSON.parse(permissions)
 			} catch (error) {
 				console.warn(error)
@@ -41,11 +37,11 @@ const account: Module<Account, Index> = {
 			state.roles = userData.roles
 			state.permissions = userData.permissions
 			localStorage.setItem(
-				import.meta.env.VITE_APP_ROLES as string,
+				import.meta.env.VITE_APP_ROLES,
 				JSON.stringify(state.roles)
 			)
 			localStorage.setItem(
-				import.meta.env.VITE_APP_PERMISSIONS as string,
+				import.meta.env.VITE_APP_PERMISSIONS,
 				JSON.stringify(state.permissions)
 			)
 		},

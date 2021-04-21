@@ -11,7 +11,7 @@
 			<el-header>
 				<Header></Header>
 			</el-header>
-			<el-main>
+			<el-main id="app-main">
 				<Tabbar></Tabbar>
 				<el-scrollbar>
 					<PageView></PageView>

@@ -25,5 +25,3 @@ elComponents.forEach((component) => {
 runTime({ router, store, message: app.config.globalProperties.$message }, app)
 
 app.mount('#app')
-
-// console.log(import.meta.env)

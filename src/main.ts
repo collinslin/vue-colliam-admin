@@ -13,15 +13,17 @@ app.use(store)
 app.use(router)
 app.use(AuthorityPlugin)
 
-elPlugins.forEach((plugin) => {
-	app.use(plugin)
+elPlugins.forEach(plugin => {
+  app.use(plugin)
 })
 
-elComponents.forEach((component) => {
-	app.component(component.name, component)
+elComponents.forEach(component => {
+  app.component(component.name, component)
 })
 
 /**应用运行时加载应用配置 */
 runTime({ router, store, message: app.config.globalProperties.$message }, app)
 
 app.mount('#app')
+
+console.log(import.meta.env)

@@ -33,8 +33,9 @@
 <script lang="ts">
   import ColliamLink from './colliamLink.vue'
   import { ComputedRef, defineComponent, inject } from '@vue/runtime-core'
-  import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
+  import { RouteRecordRaw, useRouter } from 'vue-router'
   import { isExternal } from '/@/utils/utils'
+  import { changeMenuStyle } from '/@/utils/menu-utils'
 
   export default defineComponent({
     name: 'sidebarItem',
@@ -62,10 +63,11 @@
         if (isExternal(props.basePath)) {
           return props.basePath
         }
-        return routesList.find((route) => route.name == props.item.name)?.path
+        return routesList.find(route => route.name == props.item.name)?.path
       }
 
       const chooseMenuItem = (path: string) => {
+        changeMenuStyle(path)
         menuData.value.forEach((route: RouteRecordRaw | any) => {
           if (!path.includes(route.path)) {
             route.active = false
@@ -83,8 +85,10 @@
 
 <style lang="scss" scoped>
   .item-active {
+    i,
     :deep(.el-submenu__title) {
-      color: #40a0ff;
+      font-weight: bold;
+      color: #409eff;
     }
   }
 </style>

@@ -1,7 +1,6 @@
 <template></template>
-
 <script lang="ts">
-	import { defineComponent } from '@vue/runtime-core'
+	import { defineComponent,h } from '@vue/runtime-core'
 	import { Store, useStore } from 'vuex'
 	import { RouteRecordNormalized, useRoute, useRouter } from 'vue-router'
 	import { Index } from '/@/type/store'

@@ -35,9 +35,9 @@ const addTabbar = (to: AppBeforeEachRoute, options: RunTimeOptions) => {
 	const inTabbar = tabbarData?.find((tabbar) => tabbar.path == to.path)
 	if (!inTabbar) {
 		if (to.path.includes('home')) {
-			store?.state.setting?.tabbarData.unshift(to)
+			store?.commit('setting/setTabbarData', { type: 1, data: to })
 		} else if (!tabbarFlag) {
-			store?.state.setting?.tabbarData.push(to)
+			store?.commit('setting/setTabbarData', { type: 0, data: to })
 		}
 	}
 	tabbarData?.forEach((tabbar) => {

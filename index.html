@@ -1,19 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Vite App</title>
-		<style>
-			.el-popover {
-				min-width: auto !important;
-				padding: 0 !important;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="app"></div>
-		<script type="module" src="/src/main.ts"></script>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="./public/dist/plugins/css/pluginsCss.css" />
+    <link rel="stylesheet" href="./public/dist/plugins/plugins.css" />
+    <link rel="stylesheet" href="./public/dist/assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" href="./public/dist/css/luckysheet.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <style>
+      .el-popover {
+        min-width: auto !important;
+        padding: 0 !important;
+      }
+    </style>
+    <script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+    <script>
+      // 初始化
+      localStorage.setItem('vConsole_switch_x', 200)
+
+      localStorage.setItem('vConsole_switch_x', 200)
+      var vConsole = new VConsole()
+      console.log('Hello world')
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <script src="./public/dist/plugins/js/plugin.js"></script>
+    <script src="./public/dist/luckysheet.umd.js"></script>
+  </body>
 </html>

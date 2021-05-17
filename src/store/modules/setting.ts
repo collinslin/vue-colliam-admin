@@ -19,6 +19,10 @@ const account: Module<Setting, Index> = {
 		setMenuData(state, menuData) {
 			state.menuData = menuData
 		},
+
+		setTabbarData(state, { type, data }) {
+			type ? state.tabbarData.unshift(data) : state.tabbarData.push(data)
+		},
 	},
 }
 

@@ -101,7 +101,7 @@
 					? searchData.value.filter(
 							(item) =>
 								item.path.includes(queryString) ||
-								item.name.includes(queryString)
+								item.meta.title.includes(queryString)
 					  )
 					: searchData.value
 				callback && callback(results)

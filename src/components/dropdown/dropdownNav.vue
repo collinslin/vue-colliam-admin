@@ -76,7 +76,7 @@
 		border-radius: 10px;
 		box-shadow: 0px -4px 20px 0px #0000001c;
 		transition: all 0.2s;
-		z-index: 2;
+		z-index: 16;
 		&::before {
 			content: '';
 			position: absolute;

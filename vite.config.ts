@@ -5,28 +5,31 @@ const path = require('path')
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	base: './',
-	resolve: {
-		alias: {
-			'/@': path.resolve(__dirname, './src'),
-		},
-	},
+  base: './',
+  server: {
+    port: 8085,
+  },
+  resolve: {
+    alias: {
+      '/@': path.resolve(__dirname, './src'),
+    },
+  },
 
-	plugins: [
-		vue(),
+  plugins: [
+    vue(),
 
-		styleImport({
-			libs: [
-				{
-					libraryName: 'element-plus',
-					resolveStyle: (name) => {
-						return `element-plus/lib/theme-chalk/${name}.css`
-					},
-					resolveComponent: (name) => {
-						return `element-plus/lib/${name}`
-					},
-				},
-			],
-		}),
-	],
+    styleImport({
+      libs: [
+        {
+          libraryName: 'element-plus',
+          resolveStyle: name => {
+            return `element-plus/lib/theme-chalk/${name}.css`
+          },
+          resolveComponent: name => {
+            return `element-plus/lib/${name}`
+          },
+        },
+      ],
+    }),
+  ],
 })
